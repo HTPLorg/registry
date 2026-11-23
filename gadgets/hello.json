@@ -1,0 +1,19 @@
+{
+  "name": "hello",
+  "description": "Says hello using greet.",
+  "owner": "HyperText Programming Language",
+  "owner_type": "org",
+  "owner_id": "htpl",
+  "repo": "HTPLorg/hello",
+  "versions": {
+    "0.1.0": {
+      "tag": "v0.1.0",
+      "tarball_url": "https://codeload.github.com/HTPLorg/hello/tar.gz/refs/tags/v0.1.0",
+      "sha256": "ac94c699b14356a39f76a29f0bb287d420a2f40fbefc9c0b11443d4e6fdc2b71",
+      "signature": null,
+      "signing_key": null,
+      "yanked": false,
+      "published_at": "2026-11-23T15:19:22.093Z"
+    }
+  }
+}
