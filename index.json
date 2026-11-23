@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "generated_at": "2026-11-23T15:19:30.389Z",
+  "gadgets": {
+    "hello": {
+      "description": "Says hello using greet.",
+      "owner": "HyperText Programming Language",
+      "owner_type": "org",
+      "owner_id": "htpl",
+      "repo": "HTPLorg/hello",
+      "latest": "0.1.0",
+      "file": "gadgets/hello.json"
+    }
+  }
+}
