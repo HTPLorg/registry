@@ -1,0 +1,2373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Browse the HTPL gadget registry. Install a gadget with one htpl pm install command.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090b">
+<title>Gadget Registry · HTPL</title>
+<link rel="canonical" href="https://registry.htpl.hvcrealm.com/">
+<style id="htpl-ui-style">
+/* Halo — the HTPL UI system (SPEC §26). One merged system: Tailwind-style utilities + shadcn-style components, HTPL-native. No Tailwind or shadcn code is shipped here; the class names follow the Tailwind shape and the component classes follow the shadcn shape, re-made for HTPL. This file is the source of truth: the UI_CSS constants in src/interpreter.ts and rust/src/interpreter.rs must hold these exact bytes, and htpl build emits them once per page as a style element with id htpl-ui-style when the page uses the system. Every class in this file is listed in docs/pages/ui-system.md; no undocumented classes. */
+:root{--htpl-ui-background:#ffffff;--htpl-ui-foreground:#0a0a0a;--htpl-ui-primary:#111111;--htpl-ui-primary-foreground:#ffffff;--htpl-ui-secondary:#f4f4f5;--htpl-ui-secondary-foreground:#18181b;--htpl-ui-muted:#f4f4f5;--htpl-ui-muted-foreground:#71717a;--htpl-ui-accent:#f4f4f5;--htpl-ui-accent-foreground:#18181b;--htpl-ui-destructive:#dc2626;--htpl-ui-destructive-foreground:#ffffff;--htpl-ui-border:#e4e4e7;--htpl-ui-input:#e4e4e7;--htpl-ui-ring:#0a0a0a;--htpl-ui-card:#ffffff;--htpl-ui-card-foreground:#0a0a0a;--htpl-ui-radius:.5rem}
+@media (prefers-color-scheme:dark){:root{--htpl-ui-background:#09090b;--htpl-ui-foreground:#fafafa;--htpl-ui-primary:#fafafa;--htpl-ui-primary-foreground:#09090b;--htpl-ui-secondary:#27272a;--htpl-ui-secondary-foreground:#fafafa;--htpl-ui-muted:#27272a;--htpl-ui-muted-foreground:#a1a1aa;--htpl-ui-accent:#27272a;--htpl-ui-accent-foreground:#fafafa;--htpl-ui-destructive:#ef4444;--htpl-ui-destructive-foreground:#ffffff;--htpl-ui-border:#27272a;--htpl-ui-input:#27272a;--htpl-ui-ring:#fafafa;--htpl-ui-card:#09090b;--htpl-ui-card-foreground:#fafafa}}
+[data-theme="dark"]{--htpl-ui-background:#09090b;--htpl-ui-foreground:#fafafa;--htpl-ui-primary:#fafafa;--htpl-ui-primary-foreground:#09090b;--htpl-ui-secondary:#27272a;--htpl-ui-secondary-foreground:#fafafa;--htpl-ui-muted:#27272a;--htpl-ui-muted-foreground:#a1a1aa;--htpl-ui-accent:#27272a;--htpl-ui-accent-foreground:#fafafa;--htpl-ui-destructive:#ef4444;--htpl-ui-destructive-foreground:#ffffff;--htpl-ui-border:#27272a;--htpl-ui-input:#27272a;--htpl-ui-ring:#fafafa;--htpl-ui-card:#09090b;--htpl-ui-card-foreground:#fafafa}
+[data-theme="light"]{--htpl-ui-background:#ffffff;--htpl-ui-foreground:#0a0a0a;--htpl-ui-primary:#111111;--htpl-ui-primary-foreground:#ffffff;--htpl-ui-secondary:#f4f4f5;--htpl-ui-secondary-foreground:#18181b;--htpl-ui-muted:#f4f4f5;--htpl-ui-muted-foreground:#71717a;--htpl-ui-accent:#f4f4f5;--htpl-ui-accent-foreground:#18181b;--htpl-ui-destructive:#dc2626;--htpl-ui-destructive-foreground:#ffffff;--htpl-ui-border:#e4e4e7;--htpl-ui-input:#e4e4e7;--htpl-ui-ring:#0a0a0a;--htpl-ui-card:#ffffff;--htpl-ui-card-foreground:#0a0a0a;--htpl-ui-radius:.5rem}
+.p-0{padding:0}
+.p-1{padding:.25rem}
+.p-2{padding:.5rem}
+.p-3{padding:.75rem}
+.p-4{padding:1rem}
+.p-5{padding:1.25rem}
+.p-6{padding:1.5rem}
+.p-8{padding:2rem}
+.p-10{padding:2.5rem}
+.p-12{padding:3rem}
+.p-16{padding:4rem}
+.px-0{padding-left:0;padding-right:0}
+.px-1{padding-left:.25rem;padding-right:.25rem}
+.px-2{padding-left:.5rem;padding-right:.5rem}
+.px-3{padding-left:.75rem;padding-right:.75rem}
+.px-4{padding-left:1rem;padding-right:1rem}
+.px-5{padding-left:1.25rem;padding-right:1.25rem}
+.px-6{padding-left:1.5rem;padding-right:1.5rem}
+.px-8{padding-left:2rem;padding-right:2rem}
+.px-10{padding-left:2.5rem;padding-right:2.5rem}
+.px-12{padding-left:3rem;padding-right:3rem}
+.px-16{padding-left:4rem;padding-right:4rem}
+.py-0{padding-top:0;padding-bottom:0}
+.py-1{padding-top:.25rem;padding-bottom:.25rem}
+.py-2{padding-top:.5rem;padding-bottom:.5rem}
+.py-3{padding-top:.75rem;padding-bottom:.75rem}
+.py-4{padding-top:1rem;padding-bottom:1rem}
+.py-5{padding-top:1.25rem;padding-bottom:1.25rem}
+.py-6{padding-top:1.5rem;padding-bottom:1.5rem}
+.py-8{padding-top:2rem;padding-bottom:2rem}
+.py-10{padding-top:2.5rem;padding-bottom:2.5rem}
+.py-12{padding-top:3rem;padding-bottom:3rem}
+.py-16{padding-top:4rem;padding-bottom:4rem}
+.pt-0{padding-top:0}
+.pt-1{padding-top:.25rem}
+.pt-2{padding-top:.5rem}
+.pt-3{padding-top:.75rem}
+.pt-4{padding-top:1rem}
+.pt-5{padding-top:1.25rem}
+.pt-6{padding-top:1.5rem}
+.pt-8{padding-top:2rem}
+.pt-10{padding-top:2.5rem}
+.pt-12{padding-top:3rem}
+.pt-16{padding-top:4rem}
+.pr-0{padding-right:0}
+.pr-1{padding-right:.25rem}
+.pr-2{padding-right:.5rem}
+.pr-3{padding-right:.75rem}
+.pr-4{padding-right:1rem}
+.pr-5{padding-right:1.25rem}
+.pr-6{padding-right:1.5rem}
+.pr-8{padding-right:2rem}
+.pr-10{padding-right:2.5rem}
+.pr-12{padding-right:3rem}
+.pr-16{padding-right:4rem}
+.pb-0{padding-bottom:0}
+.pb-1{padding-bottom:.25rem}
+.pb-2{padding-bottom:.5rem}
+.pb-3{padding-bottom:.75rem}
+.pb-4{padding-bottom:1rem}
+.pb-5{padding-bottom:1.25rem}
+.pb-6{padding-bottom:1.5rem}
+.pb-8{padding-bottom:2rem}
+.pb-10{padding-bottom:2.5rem}
+.pb-12{padding-bottom:3rem}
+.pb-16{padding-bottom:4rem}
+.pl-0{padding-left:0}
+.pl-1{padding-left:.25rem}
+.pl-2{padding-left:.5rem}
+.pl-3{padding-left:.75rem}
+.pl-4{padding-left:1rem}
+.pl-5{padding-left:1.25rem}
+.pl-6{padding-left:1.5rem}
+.pl-8{padding-left:2rem}
+.pl-10{padding-left:2.5rem}
+.pl-12{padding-left:3rem}
+.pl-16{padding-left:4rem}
+.m-0{margin:0}
+.m-1{margin:.25rem}
+.m-2{margin:.5rem}
+.m-3{margin:.75rem}
+.m-4{margin:1rem}
+.m-5{margin:1.25rem}
+.m-6{margin:1.5rem}
+.m-8{margin:2rem}
+.m-10{margin:2.5rem}
+.m-12{margin:3rem}
+.m-16{margin:4rem}
+.mx-0{margin-left:0;margin-right:0}
+.mx-1{margin-left:.25rem;margin-right:.25rem}
+.mx-2{margin-left:.5rem;margin-right:.5rem}
+.mx-3{margin-left:.75rem;margin-right:.75rem}
+.mx-4{margin-left:1rem;margin-right:1rem}
+.mx-5{margin-left:1.25rem;margin-right:1.25rem}
+.mx-6{margin-left:1.5rem;margin-right:1.5rem}
+.mx-8{margin-left:2rem;margin-right:2rem}
+.mx-10{margin-left:2.5rem;margin-right:2.5rem}
+.mx-12{margin-left:3rem;margin-right:3rem}
+.mx-16{margin-left:4rem;margin-right:4rem}
+.my-0{margin-top:0;margin-bottom:0}
+.my-1{margin-top:.25rem;margin-bottom:.25rem}
+.my-2{margin-top:.5rem;margin-bottom:.5rem}
+.my-3{margin-top:.75rem;margin-bottom:.75rem}
+.my-4{margin-top:1rem;margin-bottom:1rem}
+.my-5{margin-top:1.25rem;margin-bottom:1.25rem}
+.my-6{margin-top:1.5rem;margin-bottom:1.5rem}
+.my-8{margin-top:2rem;margin-bottom:2rem}
+.my-10{margin-top:2.5rem;margin-bottom:2.5rem}
+.my-12{margin-top:3rem;margin-bottom:3rem}
+.my-16{margin-top:4rem;margin-bottom:4rem}
+.mt-0{margin-top:0}
+.mt-1{margin-top:.25rem}
+.mt-2{margin-top:.5rem}
+.mt-3{margin-top:.75rem}
+.mt-4{margin-top:1rem}
+.mt-5{margin-top:1.25rem}
+.mt-6{margin-top:1.5rem}
+.mt-8{margin-top:2rem}
+.mt-10{margin-top:2.5rem}
+.mt-12{margin-top:3rem}
+.mt-16{margin-top:4rem}
+.mr-0{margin-right:0}
+.mr-1{margin-right:.25rem}
+.mr-2{margin-right:.5rem}
+.mr-3{margin-right:.75rem}
+.mr-4{margin-right:1rem}
+.mr-5{margin-right:1.25rem}
+.mr-6{margin-right:1.5rem}
+.mr-8{margin-right:2rem}
+.mr-10{margin-right:2.5rem}
+.mr-12{margin-right:3rem}
+.mr-16{margin-right:4rem}
+.mb-0{margin-bottom:0}
+.mb-1{margin-bottom:.25rem}
+.mb-2{margin-bottom:.5rem}
+.mb-3{margin-bottom:.75rem}
+.mb-4{margin-bottom:1rem}
+.mb-5{margin-bottom:1.25rem}
+.mb-6{margin-bottom:1.5rem}
+.mb-8{margin-bottom:2rem}
+.mb-10{margin-bottom:2.5rem}
+.mb-12{margin-bottom:3rem}
+.mb-16{margin-bottom:4rem}
+.ml-0{margin-left:0}
+.ml-1{margin-left:.25rem}
+.ml-2{margin-left:.5rem}
+.ml-3{margin-left:.75rem}
+.ml-4{margin-left:1rem}
+.ml-5{margin-left:1.25rem}
+.ml-6{margin-left:1.5rem}
+.ml-8{margin-left:2rem}
+.ml-10{margin-left:2.5rem}
+.ml-12{margin-left:3rem}
+.ml-16{margin-left:4rem}
+.gap-0{gap:0}
+.gap-1{gap:.25rem}
+.gap-2{gap:.5rem}
+.gap-3{gap:.75rem}
+.gap-4{gap:1rem}
+.gap-6{gap:1.5rem}
+.gap-8{gap:2rem}
+.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.block{display:block}.inline-block{display:inline-block}.hidden{display:none}.flex-col{flex-direction:column}.flex-row{flex-direction:row}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.items-end{align-items:flex-end}.justify-start{justify-content:flex-start}.justify-center{justify-content:center}.justify-end{justify-content:flex-end}.justify-between{justify-content:space-between}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.w-full{width:100%}.max-w-sm{max-width:24rem}.max-w-md{max-width:28rem}.max-w-lg{max-width:32rem}.max-w-xl{max-width:36rem}.max-w-2xl{max-width:42rem}.max-w-4xl{max-width:56rem}.max-w-6xl{max-width:72rem}.mx-auto{margin-left:auto;margin-right:auto}
+.text-xs{font-size:.75rem;line-height:1rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.font-normal{font-weight:400}.font-medium{font-weight:500}.font-semibold{font-weight:600}.font-bold{font-weight:700}.leading-none{line-height:1}.leading-tight{line-height:1.25}.leading-normal{line-height:1.5}.leading-relaxed{line-height:1.625}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.tracking-tight{letter-spacing:-.025em}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bg-background{background-color:var(--htpl-ui-background)}.bg-primary{background-color:var(--htpl-ui-primary)}.bg-secondary{background-color:var(--htpl-ui-secondary)}.bg-muted{background-color:var(--htpl-ui-muted)}.bg-accent{background-color:var(--htpl-ui-accent)}.bg-destructive{background-color:var(--htpl-ui-destructive)}.bg-card{background-color:var(--htpl-ui-card)}.text-foreground{color:var(--htpl-ui-foreground)}.text-primary{color:var(--htpl-ui-primary)}.text-muted{color:var(--htpl-ui-muted-foreground)}.text-destructive{color:var(--htpl-ui-destructive)}.text-primary-foreground{color:var(--htpl-ui-primary-foreground)}.text-secondary-foreground{color:var(--htpl-ui-secondary-foreground)}.text-muted-foreground{color:var(--htpl-ui-muted-foreground)}.text-destructive-foreground{color:var(--htpl-ui-destructive-foreground)}.border-border{border-color:var(--htpl-ui-border)}.border-primary{border-color:var(--htpl-ui-primary)}.border-destructive{border-color:var(--htpl-ui-destructive)}
+.rounded-none{border-radius:0}.rounded-sm{border-radius:.125rem}.rounded-md{border-radius:var(--htpl-ui-radius)}.rounded-lg{border-radius:.75rem}.rounded-full{border-radius:9999px}.border{border-width:1px;border-style:solid;border-color:var(--htpl-ui-border)}.border-t{border-top-width:1px;border-top-style:solid;border-color:var(--htpl-ui-border)}.border-0{border-width:0}.shadow-none{box-shadow:none}.shadow-sm{box-shadow:0 1px 2px 0 rgba(0,0,0,.05)}.shadow-md{box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1)}.shadow-lg{box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1)}
+.hover\:bg-primary:hover{background-color:var(--htpl-ui-primary)}.hover\:bg-secondary:hover{background-color:var(--htpl-ui-secondary)}.hover\:bg-accent:hover{background-color:var(--htpl-ui-accent)}.hover\:bg-muted:hover{background-color:var(--htpl-ui-muted)}.hover\:opacity-80:hover{opacity:.8}
+.opacity-50{opacity:.5}.opacity-70{opacity:.7}.opacity-80{opacity:.8}.cursor-pointer{cursor:pointer}.transition{transition:color .15s ease,background-color .15s ease,border-color .15s ease,box-shadow .15s ease}
+.htpl-ui-btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font:inherit;font-weight:500;white-space:nowrap;border:1px solid transparent;border-radius:var(--htpl-ui-radius);cursor:pointer;text-decoration:none;transition:color .15s ease,background-color .15s ease,border-color .15s ease}
+.htpl-ui-btn-default{background-color:var(--htpl-ui-primary);color:var(--htpl-ui-primary-foreground)}.htpl-ui-btn-secondary{background-color:var(--htpl-ui-secondary);color:var(--htpl-ui-secondary-foreground)}.htpl-ui-btn-outline{background-color:transparent;border-color:var(--htpl-ui-input);color:var(--htpl-ui-foreground)}.htpl-ui-btn-ghost{background-color:transparent;color:var(--htpl-ui-foreground)}.htpl-ui-btn-destructive{background-color:var(--htpl-ui-destructive);color:var(--htpl-ui-destructive-foreground)}
+.htpl-ui-btn-size-sm{height:2rem;padding:0 .75rem;font-size:.875rem}.htpl-ui-btn-size-default{height:2.5rem;padding:0 1rem;font-size:.875rem}.htpl-ui-btn-size-lg{height:2.75rem;padding:0 1.5rem;font-size:1rem}
+.htpl-ui-btn-default:hover{opacity:.9}.htpl-ui-btn-destructive:hover{opacity:.9}.htpl-ui-btn-secondary:hover{background-color:var(--htpl-ui-accent)}.htpl-ui-btn-outline:hover{background-color:var(--htpl-ui-accent)}.htpl-ui-btn-ghost:hover{background-color:var(--htpl-ui-accent)}.htpl-ui-btn:disabled{opacity:.5;cursor:not-allowed;pointer-events:none}
+.htpl-ui-btn:focus-visible,.htpl-ui-input:focus-visible,.htpl-ui-textarea:focus-visible,.htpl-ui-select:focus-visible,.htpl-ui-checkbox:focus-visible,.htpl-ui-switch:focus-visible,.htpl-ui-tab-input:focus-visible+.htpl-ui-tab-label{outline:2px solid var(--htpl-ui-ring);outline-offset:2px}
+.htpl-ui-card{background-color:var(--htpl-ui-card);color:var(--htpl-ui-card-foreground);border:1px solid var(--htpl-ui-border);border-radius:var(--htpl-ui-radius);box-shadow:0 1px 2px 0 rgba(0,0,0,.05)}.htpl-ui-card-header{padding:1.5rem 1.5rem 0}.htpl-ui-card-title{font-size:1.125rem;font-weight:600;line-height:1.25;margin:0}.htpl-ui-card-body{padding:1.5rem}
+.htpl-ui-input,.htpl-ui-textarea,.htpl-ui-select{font:inherit;color:var(--htpl-ui-foreground);background-color:var(--htpl-ui-background);border:1px solid var(--htpl-ui-input);border-radius:var(--htpl-ui-radius);width:100%}
+.htpl-ui-input{height:2.5rem;padding:0 .75rem}.htpl-ui-input-size-sm{height:2rem;font-size:.875rem}.htpl-ui-input-size-default{height:2.5rem;font-size:.875rem}.htpl-ui-input-size-lg{height:2.75rem;font-size:1rem}
+.htpl-ui-textarea{padding:.5rem .75rem;min-height:5rem;resize:vertical}.htpl-ui-select{height:2.5rem;padding:0 .75rem}.htpl-ui-input::placeholder,.htpl-ui-textarea::placeholder{color:var(--htpl-ui-muted-foreground)}.htpl-ui-input:disabled,.htpl-ui-textarea:disabled,.htpl-ui-select:disabled{opacity:.5;cursor:not-allowed}
+.htpl-ui-badge{display:inline-flex;align-items:center;gap:.25rem;border:1px solid transparent;border-radius:9999px;font-weight:600;white-space:nowrap}
+.htpl-ui-badge-default{background-color:var(--htpl-ui-primary);color:var(--htpl-ui-primary-foreground)}.htpl-ui-badge-secondary{background-color:var(--htpl-ui-secondary);color:var(--htpl-ui-secondary-foreground)}.htpl-ui-badge-outline{background-color:transparent;border-color:var(--htpl-ui-input);color:var(--htpl-ui-foreground)}.htpl-ui-badge-destructive{background-color:var(--htpl-ui-destructive);color:var(--htpl-ui-destructive-foreground)}
+.htpl-ui-badge-size-sm{padding:.125rem .5rem;font-size:.75rem}.htpl-ui-badge-size-default{padding:.25rem .625rem;font-size:.75rem}.htpl-ui-badge-size-lg{padding:.375rem .75rem;font-size:.875rem}
+.htpl-ui-table-wrap{overflow-x:auto;border:1px solid var(--htpl-ui-border);border-radius:var(--htpl-ui-radius)}.htpl-ui-table{width:100%;border-collapse:collapse;font-size:.875rem;background-color:var(--htpl-ui-card);color:var(--htpl-ui-card-foreground)}.htpl-ui-table th,.htpl-ui-table td{padding:.5rem 1rem;text-align:left;border-bottom:1px solid var(--htpl-ui-border)}.htpl-ui-table th{font-weight:600;color:var(--htpl-ui-muted-foreground)}.htpl-ui-table tr:last-child td{border-bottom:0}.htpl-ui-table caption{padding:.75rem 1rem;font-weight:600;text-align:left}
+.htpl-ui-tabs{display:block}.htpl-ui-tab-input{position:absolute;opacity:0;width:1px;height:1px}.htpl-ui-tab-label{display:inline-flex;align-items:center;height:2.5rem;padding:0 1rem;font-size:.875rem;font-weight:500;color:var(--htpl-ui-muted-foreground);cursor:pointer;border-bottom:2px solid transparent}.htpl-ui-tab-input:checked+.htpl-ui-tab-label{color:var(--htpl-ui-foreground);border-bottom-color:var(--htpl-ui-primary)}.htpl-ui-tab-panel{display:none;padding:1rem 0}.htpl-ui-tab-input:checked+.htpl-ui-tab-label+.htpl-ui-tab-panel{display:block}
+.htpl-ui-dialog-toggle{position:absolute;opacity:0;width:1px;height:1px}.htpl-ui-dialog-panel{display:none;position:fixed;inset:0;z-index:50;align-items:center;justify-content:center;background-color:rgba(0,0,0,.5);padding:1rem}.htpl-ui-dialog-toggle:checked~.htpl-ui-dialog-panel{display:flex}.htpl-ui-dialog-box{position:relative;background-color:var(--htpl-ui-card);color:var(--htpl-ui-card-foreground);border:1px solid var(--htpl-ui-border);border-radius:var(--htpl-ui-radius);box-shadow:0 10px 15px -3px rgba(0,0,0,.1);padding:1.5rem;max-width:28rem;width:100%}.htpl-ui-dialog-close{position:absolute;top:.75rem;right:.75rem;cursor:pointer;font-size:1.25rem;line-height:1;color:var(--htpl-ui-muted-foreground)}
+.htpl-ui-alert{border:1px solid var(--htpl-ui-border);border-radius:var(--htpl-ui-radius);padding:1rem;background-color:var(--htpl-ui-card);color:var(--htpl-ui-card-foreground)}.htpl-ui-alert-default{border-color:var(--htpl-ui-border)}.htpl-ui-alert-destructive{border-color:var(--htpl-ui-destructive);color:var(--htpl-ui-destructive)}.htpl-ui-alert-title{font-weight:600;margin:0 0 .25rem}.htpl-ui-alert p:last-child{margin-bottom:0}
+.htpl-ui-avatar{display:inline-flex;align-items:center;justify-content:center;overflow:hidden;border-radius:9999px;background-color:var(--htpl-ui-muted);color:var(--htpl-ui-muted-foreground);font-weight:600}.htpl-ui-avatar-size-sm{width:2rem;height:2rem;font-size:.75rem}.htpl-ui-avatar-size-default{width:2.5rem;height:2.5rem;font-size:.875rem}.htpl-ui-avatar-size-lg{width:3rem;height:3rem;font-size:1rem}.htpl-ui-avatar-img{border-radius:9999px;object-fit:cover;display:block}
+.htpl-ui-skeleton{border-radius:var(--htpl-ui-radius);background-color:var(--htpl-ui-muted);animation:htpl-ui-pulse 2s cubic-bezier(.4,0,.6,1) infinite}@keyframes htpl-ui-pulse{0%,100%{opacity:1}50%{opacity:.5}}@media (prefers-reduced-motion:reduce){.htpl-ui-skeleton{animation:none}}
+.htpl-ui-separator{background-color:var(--htpl-ui-border);border:0}.htpl-ui-separator-horizontal{height:1px;width:100%}.htpl-ui-separator-vertical{width:1px;height:100%;align-self:stretch}
+.htpl-ui-switch-label{display:inline-flex;align-items:center;gap:.5rem;cursor:pointer;font-size:.875rem}.htpl-ui-switch{appearance:none;-webkit-appearance:none;width:2.5rem;height:1.5rem;border-radius:9999px;background-color:var(--htpl-ui-input);border:0;position:relative;cursor:pointer;transition:background-color .15s ease;margin:0;flex:none}.htpl-ui-switch::after{content:"";position:absolute;top:.25rem;left:.25rem;width:1rem;height:1rem;border-radius:9999px;background-color:var(--htpl-ui-background);transition:transform .15s ease}.htpl-ui-switch:checked{background-color:var(--htpl-ui-primary)}.htpl-ui-switch:checked::after{transform:translateX(1rem)}.htpl-ui-switch:disabled{opacity:.5;cursor:not-allowed}
+.htpl-ui-checkbox-label{display:inline-flex;align-items:center;gap:.5rem;cursor:pointer;font-size:.875rem}.htpl-ui-checkbox{appearance:none;-webkit-appearance:none;width:1.25rem;height:1.25rem;border-radius:.25rem;border:1px solid var(--htpl-ui-input);background-color:var(--htpl-ui-background);position:relative;cursor:pointer;margin:0;flex:none}.htpl-ui-checkbox:checked{background-color:var(--htpl-ui-primary);border-color:var(--htpl-ui-primary)}.htpl-ui-checkbox:checked::after{content:"";position:absolute;left:.375rem;top:.125rem;width:.3rem;height:.625rem;border:solid var(--htpl-ui-primary-foreground);border-width:0 2px 2px 0;transform:rotate(45deg)}.htpl-ui-checkbox:disabled{opacity:.5;cursor:not-allowed}
+.htpl-ui-breadcrumb{font-size:.875rem}.htpl-ui-breadcrumb ol{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;margin:0;padding:0}.htpl-ui-breadcrumb-item{color:var(--htpl-ui-muted-foreground)}.htpl-ui-breadcrumb-item:last-child{color:var(--htpl-ui-foreground);font-weight:500}.htpl-ui-breadcrumb-item+.htpl-ui-breadcrumb-item::before{content:"/";margin-right:.5rem;color:var(--htpl-ui-muted-foreground)}
+/* --- Responsive variants (SPEC §26.4): mobile-first min-width
+   prefixes sm 640px / md 768px / lg 1024px. Deliberately the
+   same covered set at each breakpoint: display, flex, items,
+   justify, grid-cols, width/max-width, type size/weight/leading/
+   align, and the bounded spacing set (p/px/py/m/mx/my + gap).
+   NOT responsive: colours, radius/border/shadow, hover:,
+   position/z/ring/animate below, tracking-tight, truncate,
+   mx-auto, side-specific spacing (pt/pr/pb/pl/mt/mr/mb/ml) —
+   see docs/halo-css-notes.md for the justification. */
+@media (min-width:640px){
+.sm\:flex{display:flex}
+.sm\:inline-flex{display:inline-flex}
+.sm\:grid{display:grid}
+.sm\:block{display:block}
+.sm\:inline-block{display:inline-block}
+.sm\:hidden{display:none}
+.sm\:flex-col{flex-direction:column}
+.sm\:flex-row{flex-direction:row}
+.sm\:flex-wrap{flex-wrap:wrap}
+.sm\:items-start{align-items:flex-start}
+.sm\:items-center{align-items:center}
+.sm\:items-end{align-items:flex-end}
+.sm\:justify-start{justify-content:flex-start}
+.sm\:justify-center{justify-content:center}
+.sm\:justify-end{justify-content:flex-end}
+.sm\:justify-between{justify-content:space-between}
+.sm\:grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}
+.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.sm\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.sm\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.sm\:w-full{width:100%}
+.sm\:max-w-sm{max-width:24rem}
+.sm\:max-w-md{max-width:28rem}
+.sm\:max-w-lg{max-width:32rem}
+.sm\:max-w-xl{max-width:36rem}
+.sm\:max-w-2xl{max-width:42rem}
+.sm\:max-w-4xl{max-width:56rem}
+.sm\:max-w-6xl{max-width:72rem}
+.sm\:text-xs{font-size:.75rem;line-height:1rem}
+.sm\:text-sm{font-size:.875rem;line-height:1.25rem}
+.sm\:text-base{font-size:1rem;line-height:1.5rem}
+.sm\:text-lg{font-size:1.125rem;line-height:1.75rem}
+.sm\:text-xl{font-size:1.25rem;line-height:1.75rem}
+.sm\:text-2xl{font-size:1.5rem;line-height:2rem}
+.sm\:text-3xl{font-size:1.875rem;line-height:2.25rem}
+.sm\:text-4xl{font-size:2.25rem;line-height:2.5rem}
+.sm\:font-normal{font-weight:400}
+.sm\:font-medium{font-weight:500}
+.sm\:font-semibold{font-weight:600}
+.sm\:font-bold{font-weight:700}
+.sm\:leading-none{line-height:1}
+.sm\:leading-tight{line-height:1.25}
+.sm\:leading-normal{line-height:1.5}
+.sm\:leading-relaxed{line-height:1.625}
+.sm\:text-left{text-align:left}
+.sm\:text-center{text-align:center}
+.sm\:text-right{text-align:right}
+.sm\:p-0{padding:0}
+.sm\:p-1{padding:.25rem}
+.sm\:p-2{padding:.5rem}
+.sm\:p-3{padding:.75rem}
+.sm\:p-4{padding:1rem}
+.sm\:p-5{padding:1.25rem}
+.sm\:p-6{padding:1.5rem}
+.sm\:p-8{padding:2rem}
+.sm\:p-10{padding:2.5rem}
+.sm\:p-12{padding:3rem}
+.sm\:p-16{padding:4rem}
+.sm\:px-0{padding-left:0;padding-right:0}
+.sm\:px-1{padding-left:.25rem;padding-right:.25rem}
+.sm\:px-2{padding-left:.5rem;padding-right:.5rem}
+.sm\:px-3{padding-left:.75rem;padding-right:.75rem}
+.sm\:px-4{padding-left:1rem;padding-right:1rem}
+.sm\:px-5{padding-left:1.25rem;padding-right:1.25rem}
+.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}
+.sm\:px-8{padding-left:2rem;padding-right:2rem}
+.sm\:px-10{padding-left:2.5rem;padding-right:2.5rem}
+.sm\:px-12{padding-left:3rem;padding-right:3rem}
+.sm\:px-16{padding-left:4rem;padding-right:4rem}
+.sm\:py-0{padding-top:0;padding-bottom:0}
+.sm\:py-1{padding-top:.25rem;padding-bottom:.25rem}
+.sm\:py-2{padding-top:.5rem;padding-bottom:.5rem}
+.sm\:py-3{padding-top:.75rem;padding-bottom:.75rem}
+.sm\:py-4{padding-top:1rem;padding-bottom:1rem}
+.sm\:py-5{padding-top:1.25rem;padding-bottom:1.25rem}
+.sm\:py-6{padding-top:1.5rem;padding-bottom:1.5rem}
+.sm\:py-8{padding-top:2rem;padding-bottom:2rem}
+.sm\:py-10{padding-top:2.5rem;padding-bottom:2.5rem}
+.sm\:py-12{padding-top:3rem;padding-bottom:3rem}
+.sm\:py-16{padding-top:4rem;padding-bottom:4rem}
+.sm\:m-0{margin:0}
+.sm\:m-1{margin:.25rem}
+.sm\:m-2{margin:.5rem}
+.sm\:m-3{margin:.75rem}
+.sm\:m-4{margin:1rem}
+.sm\:m-5{margin:1.25rem}
+.sm\:m-6{margin:1.5rem}
+.sm\:m-8{margin:2rem}
+.sm\:m-10{margin:2.5rem}
+.sm\:m-12{margin:3rem}
+.sm\:m-16{margin:4rem}
+.sm\:mx-0{margin-left:0;margin-right:0}
+.sm\:mx-1{margin-left:.25rem;margin-right:.25rem}
+.sm\:mx-2{margin-left:.5rem;margin-right:.5rem}
+.sm\:mx-3{margin-left:.75rem;margin-right:.75rem}
+.sm\:mx-4{margin-left:1rem;margin-right:1rem}
+.sm\:mx-5{margin-left:1.25rem;margin-right:1.25rem}
+.sm\:mx-6{margin-left:1.5rem;margin-right:1.5rem}
+.sm\:mx-8{margin-left:2rem;margin-right:2rem}
+.sm\:mx-10{margin-left:2.5rem;margin-right:2.5rem}
+.sm\:mx-12{margin-left:3rem;margin-right:3rem}
+.sm\:mx-16{margin-left:4rem;margin-right:4rem}
+.sm\:my-0{margin-top:0;margin-bottom:0}
+.sm\:my-1{margin-top:.25rem;margin-bottom:.25rem}
+.sm\:my-2{margin-top:.5rem;margin-bottom:.5rem}
+.sm\:my-3{margin-top:.75rem;margin-bottom:.75rem}
+.sm\:my-4{margin-top:1rem;margin-bottom:1rem}
+.sm\:my-5{margin-top:1.25rem;margin-bottom:1.25rem}
+.sm\:my-6{margin-top:1.5rem;margin-bottom:1.5rem}
+.sm\:my-8{margin-top:2rem;margin-bottom:2rem}
+.sm\:my-10{margin-top:2.5rem;margin-bottom:2.5rem}
+.sm\:my-12{margin-top:3rem;margin-bottom:3rem}
+.sm\:my-16{margin-top:4rem;margin-bottom:4rem}
+.sm\:gap-0{gap:0}
+.sm\:gap-1{gap:.25rem}
+.sm\:gap-2{gap:.5rem}
+.sm\:gap-3{gap:.75rem}
+.sm\:gap-4{gap:1rem}
+.sm\:gap-6{gap:1.5rem}
+.sm\:gap-8{gap:2rem}
+.sm\:gap-12{gap:3rem}
+}
+@media (min-width:768px){
+.md\:flex{display:flex}
+.md\:inline-flex{display:inline-flex}
+.md\:grid{display:grid}
+.md\:block{display:block}
+.md\:inline-block{display:inline-block}
+.md\:hidden{display:none}
+.md\:flex-col{flex-direction:column}
+.md\:flex-row{flex-direction:row}
+.md\:flex-wrap{flex-wrap:wrap}
+.md\:items-start{align-items:flex-start}
+.md\:items-center{align-items:center}
+.md\:items-end{align-items:flex-end}
+.md\:justify-start{justify-content:flex-start}
+.md\:justify-center{justify-content:center}
+.md\:justify-end{justify-content:flex-end}
+.md\:justify-between{justify-content:space-between}
+.md\:grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}
+.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.md\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.md\:w-full{width:100%}
+.md\:max-w-sm{max-width:24rem}
+.md\:max-w-md{max-width:28rem}
+.md\:max-w-lg{max-width:32rem}
+.md\:max-w-xl{max-width:36rem}
+.md\:max-w-2xl{max-width:42rem}
+.md\:max-w-4xl{max-width:56rem}
+.md\:max-w-6xl{max-width:72rem}
+.md\:text-xs{font-size:.75rem;line-height:1rem}
+.md\:text-sm{font-size:.875rem;line-height:1.25rem}
+.md\:text-base{font-size:1rem;line-height:1.5rem}
+.md\:text-lg{font-size:1.125rem;line-height:1.75rem}
+.md\:text-xl{font-size:1.25rem;line-height:1.75rem}
+.md\:text-2xl{font-size:1.5rem;line-height:2rem}
+.md\:text-3xl{font-size:1.875rem;line-height:2.25rem}
+.md\:text-4xl{font-size:2.25rem;line-height:2.5rem}
+.md\:font-normal{font-weight:400}
+.md\:font-medium{font-weight:500}
+.md\:font-semibold{font-weight:600}
+.md\:font-bold{font-weight:700}
+.md\:leading-none{line-height:1}
+.md\:leading-tight{line-height:1.25}
+.md\:leading-normal{line-height:1.5}
+.md\:leading-relaxed{line-height:1.625}
+.md\:text-left{text-align:left}
+.md\:text-center{text-align:center}
+.md\:text-right{text-align:right}
+.md\:p-0{padding:0}
+.md\:p-1{padding:.25rem}
+.md\:p-2{padding:.5rem}
+.md\:p-3{padding:.75rem}
+.md\:p-4{padding:1rem}
+.md\:p-5{padding:1.25rem}
+.md\:p-6{padding:1.5rem}
+.md\:p-8{padding:2rem}
+.md\:p-10{padding:2.5rem}
+.md\:p-12{padding:3rem}
+.md\:p-16{padding:4rem}
+.md\:px-0{padding-left:0;padding-right:0}
+.md\:px-1{padding-left:.25rem;padding-right:.25rem}
+.md\:px-2{padding-left:.5rem;padding-right:.5rem}
+.md\:px-3{padding-left:.75rem;padding-right:.75rem}
+.md\:px-4{padding-left:1rem;padding-right:1rem}
+.md\:px-5{padding-left:1.25rem;padding-right:1.25rem}
+.md\:px-6{padding-left:1.5rem;padding-right:1.5rem}
+.md\:px-8{padding-left:2rem;padding-right:2rem}
+.md\:px-10{padding-left:2.5rem;padding-right:2.5rem}
+.md\:px-12{padding-left:3rem;padding-right:3rem}
+.md\:px-16{padding-left:4rem;padding-right:4rem}
+.md\:py-0{padding-top:0;padding-bottom:0}
+.md\:py-1{padding-top:.25rem;padding-bottom:.25rem}
+.md\:py-2{padding-top:.5rem;padding-bottom:.5rem}
+.md\:py-3{padding-top:.75rem;padding-bottom:.75rem}
+.md\:py-4{padding-top:1rem;padding-bottom:1rem}
+.md\:py-5{padding-top:1.25rem;padding-bottom:1.25rem}
+.md\:py-6{padding-top:1.5rem;padding-bottom:1.5rem}
+.md\:py-8{padding-top:2rem;padding-bottom:2rem}
+.md\:py-10{padding-top:2.5rem;padding-bottom:2.5rem}
+.md\:py-12{padding-top:3rem;padding-bottom:3rem}
+.md\:py-16{padding-top:4rem;padding-bottom:4rem}
+.md\:m-0{margin:0}
+.md\:m-1{margin:.25rem}
+.md\:m-2{margin:.5rem}
+.md\:m-3{margin:.75rem}
+.md\:m-4{margin:1rem}
+.md\:m-5{margin:1.25rem}
+.md\:m-6{margin:1.5rem}
+.md\:m-8{margin:2rem}
+.md\:m-10{margin:2.5rem}
+.md\:m-12{margin:3rem}
+.md\:m-16{margin:4rem}
+.md\:mx-0{margin-left:0;margin-right:0}
+.md\:mx-1{margin-left:.25rem;margin-right:.25rem}
+.md\:mx-2{margin-left:.5rem;margin-right:.5rem}
+.md\:mx-3{margin-left:.75rem;margin-right:.75rem}
+.md\:mx-4{margin-left:1rem;margin-right:1rem}
+.md\:mx-5{margin-left:1.25rem;margin-right:1.25rem}
+.md\:mx-6{margin-left:1.5rem;margin-right:1.5rem}
+.md\:mx-8{margin-left:2rem;margin-right:2rem}
+.md\:mx-10{margin-left:2.5rem;margin-right:2.5rem}
+.md\:mx-12{margin-left:3rem;margin-right:3rem}
+.md\:mx-16{margin-left:4rem;margin-right:4rem}
+.md\:my-0{margin-top:0;margin-bottom:0}
+.md\:my-1{margin-top:.25rem;margin-bottom:.25rem}
+.md\:my-2{margin-top:.5rem;margin-bottom:.5rem}
+.md\:my-3{margin-top:.75rem;margin-bottom:.75rem}
+.md\:my-4{margin-top:1rem;margin-bottom:1rem}
+.md\:my-5{margin-top:1.25rem;margin-bottom:1.25rem}
+.md\:my-6{margin-top:1.5rem;margin-bottom:1.5rem}
+.md\:my-8{margin-top:2rem;margin-bottom:2rem}
+.md\:my-10{margin-top:2.5rem;margin-bottom:2.5rem}
+.md\:my-12{margin-top:3rem;margin-bottom:3rem}
+.md\:my-16{margin-top:4rem;margin-bottom:4rem}
+.md\:gap-0{gap:0}
+.md\:gap-1{gap:.25rem}
+.md\:gap-2{gap:.5rem}
+.md\:gap-3{gap:.75rem}
+.md\:gap-4{gap:1rem}
+.md\:gap-6{gap:1.5rem}
+.md\:gap-8{gap:2rem}
+.md\:gap-12{gap:3rem}
+}
+@media (min-width:1024px){
+.lg\:flex{display:flex}
+.lg\:inline-flex{display:inline-flex}
+.lg\:grid{display:grid}
+.lg\:block{display:block}
+.lg\:inline-block{display:inline-block}
+.lg\:hidden{display:none}
+.lg\:flex-col{flex-direction:column}
+.lg\:flex-row{flex-direction:row}
+.lg\:flex-wrap{flex-wrap:wrap}
+.lg\:items-start{align-items:flex-start}
+.lg\:items-center{align-items:center}
+.lg\:items-end{align-items:flex-end}
+.lg\:justify-start{justify-content:flex-start}
+.lg\:justify-center{justify-content:center}
+.lg\:justify-end{justify-content:flex-end}
+.lg\:justify-between{justify-content:space-between}
+.lg\:grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}
+.lg\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.lg\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.lg\:w-full{width:100%}
+.lg\:max-w-sm{max-width:24rem}
+.lg\:max-w-md{max-width:28rem}
+.lg\:max-w-lg{max-width:32rem}
+.lg\:max-w-xl{max-width:36rem}
+.lg\:max-w-2xl{max-width:42rem}
+.lg\:max-w-4xl{max-width:56rem}
+.lg\:max-w-6xl{max-width:72rem}
+.lg\:text-xs{font-size:.75rem;line-height:1rem}
+.lg\:text-sm{font-size:.875rem;line-height:1.25rem}
+.lg\:text-base{font-size:1rem;line-height:1.5rem}
+.lg\:text-lg{font-size:1.125rem;line-height:1.75rem}
+.lg\:text-xl{font-size:1.25rem;line-height:1.75rem}
+.lg\:text-2xl{font-size:1.5rem;line-height:2rem}
+.lg\:text-3xl{font-size:1.875rem;line-height:2.25rem}
+.lg\:text-4xl{font-size:2.25rem;line-height:2.5rem}
+.lg\:font-normal{font-weight:400}
+.lg\:font-medium{font-weight:500}
+.lg\:font-semibold{font-weight:600}
+.lg\:font-bold{font-weight:700}
+.lg\:leading-none{line-height:1}
+.lg\:leading-tight{line-height:1.25}
+.lg\:leading-normal{line-height:1.5}
+.lg\:leading-relaxed{line-height:1.625}
+.lg\:text-left{text-align:left}
+.lg\:text-center{text-align:center}
+.lg\:text-right{text-align:right}
+.lg\:p-0{padding:0}
+.lg\:p-1{padding:.25rem}
+.lg\:p-2{padding:.5rem}
+.lg\:p-3{padding:.75rem}
+.lg\:p-4{padding:1rem}
+.lg\:p-5{padding:1.25rem}
+.lg\:p-6{padding:1.5rem}
+.lg\:p-8{padding:2rem}
+.lg\:p-10{padding:2.5rem}
+.lg\:p-12{padding:3rem}
+.lg\:p-16{padding:4rem}
+.lg\:px-0{padding-left:0;padding-right:0}
+.lg\:px-1{padding-left:.25rem;padding-right:.25rem}
+.lg\:px-2{padding-left:.5rem;padding-right:.5rem}
+.lg\:px-3{padding-left:.75rem;padding-right:.75rem}
+.lg\:px-4{padding-left:1rem;padding-right:1rem}
+.lg\:px-5{padding-left:1.25rem;padding-right:1.25rem}
+.lg\:px-6{padding-left:1.5rem;padding-right:1.5rem}
+.lg\:px-8{padding-left:2rem;padding-right:2rem}
+.lg\:px-10{padding-left:2.5rem;padding-right:2.5rem}
+.lg\:px-12{padding-left:3rem;padding-right:3rem}
+.lg\:px-16{padding-left:4rem;padding-right:4rem}
+.lg\:py-0{padding-top:0;padding-bottom:0}
+.lg\:py-1{padding-top:.25rem;padding-bottom:.25rem}
+.lg\:py-2{padding-top:.5rem;padding-bottom:.5rem}
+.lg\:py-3{padding-top:.75rem;padding-bottom:.75rem}
+.lg\:py-4{padding-top:1rem;padding-bottom:1rem}
+.lg\:py-5{padding-top:1.25rem;padding-bottom:1.25rem}
+.lg\:py-6{padding-top:1.5rem;padding-bottom:1.5rem}
+.lg\:py-8{padding-top:2rem;padding-bottom:2rem}
+.lg\:py-10{padding-top:2.5rem;padding-bottom:2.5rem}
+.lg\:py-12{padding-top:3rem;padding-bottom:3rem}
+.lg\:py-16{padding-top:4rem;padding-bottom:4rem}
+.lg\:m-0{margin:0}
+.lg\:m-1{margin:.25rem}
+.lg\:m-2{margin:.5rem}
+.lg\:m-3{margin:.75rem}
+.lg\:m-4{margin:1rem}
+.lg\:m-5{margin:1.25rem}
+.lg\:m-6{margin:1.5rem}
+.lg\:m-8{margin:2rem}
+.lg\:m-10{margin:2.5rem}
+.lg\:m-12{margin:3rem}
+.lg\:m-16{margin:4rem}
+.lg\:mx-0{margin-left:0;margin-right:0}
+.lg\:mx-1{margin-left:.25rem;margin-right:.25rem}
+.lg\:mx-2{margin-left:.5rem;margin-right:.5rem}
+.lg\:mx-3{margin-left:.75rem;margin-right:.75rem}
+.lg\:mx-4{margin-left:1rem;margin-right:1rem}
+.lg\:mx-5{margin-left:1.25rem;margin-right:1.25rem}
+.lg\:mx-6{margin-left:1.5rem;margin-right:1.5rem}
+.lg\:mx-8{margin-left:2rem;margin-right:2rem}
+.lg\:mx-10{margin-left:2.5rem;margin-right:2.5rem}
+.lg\:mx-12{margin-left:3rem;margin-right:3rem}
+.lg\:mx-16{margin-left:4rem;margin-right:4rem}
+.lg\:my-0{margin-top:0;margin-bottom:0}
+.lg\:my-1{margin-top:.25rem;margin-bottom:.25rem}
+.lg\:my-2{margin-top:.5rem;margin-bottom:.5rem}
+.lg\:my-3{margin-top:.75rem;margin-bottom:.75rem}
+.lg\:my-4{margin-top:1rem;margin-bottom:1rem}
+.lg\:my-5{margin-top:1.25rem;margin-bottom:1.25rem}
+.lg\:my-6{margin-top:1.5rem;margin-bottom:1.5rem}
+.lg\:my-8{margin-top:2rem;margin-bottom:2rem}
+.lg\:my-10{margin-top:2.5rem;margin-bottom:2.5rem}
+.lg\:my-12{margin-top:3rem;margin-bottom:3rem}
+.lg\:my-16{margin-top:4rem;margin-bottom:4rem}
+.lg\:gap-0{gap:0}
+.lg\:gap-1{gap:.25rem}
+.lg\:gap-2{gap:.5rem}
+.lg\:gap-3{gap:.75rem}
+.lg\:gap-4{gap:1rem}
+.lg\:gap-6{gap:1.5rem}
+.lg\:gap-8{gap:2rem}
+.lg\:gap-12{gap:3rem}
+}
+/* --- gap-12: the 3rem step the spacing scale already has
+   (p-12/m-12); the gap scale stopped at 8. Added so the site
+   hero grid (3rem gap) can be expressed with Halo alone. */
+.gap-12{gap:3rem}
+/* --- Withheld utilities, added deliberately (SPEC §26.4):
+   position, z-index, ring, animate. Bounded sets only —
+   no w-*/h-* sizes, no overflow-*, no inset-* beyond inset-0,
+   no ring colours/offsets, no further animations. */
+.static{position:static}
+.relative{position:relative}
+.absolute{position:absolute}
+.fixed{position:fixed}
+.sticky{position:sticky}
+.inset-0{top:0;right:0;bottom:0;left:0}
+.top-0{top:0}
+.z-0{z-index:0}
+.z-10{z-index:10}
+.z-20{z-index:20}
+.z-30{z-index:30}
+.z-40{z-index:40}
+.z-50{z-index:50}
+.ring-0{box-shadow:0 0 0 0 var(--htpl-ui-ring)}
+.ring-1{box-shadow:0 0 0 1px var(--htpl-ui-ring)}
+.ring-2{box-shadow:0 0 0 2px var(--htpl-ui-ring)}
+.ring-4{box-shadow:0 0 0 4px var(--htpl-ui-ring)}
+.animate-pulse{animation:htpl-ui-pulse 2s cubic-bezier(.4,0,.6,1) infinite}
+.animate-spin{animation:htpl-ui-spin 1s linear infinite}
+.animate-fade-in{animation:htpl-ui-fade-in .5s ease both}
+@keyframes htpl-ui-spin{to{transform:rotate(360deg)}}
+@keyframes htpl-ui-fade-in{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.animate-pulse,.animate-spin,.animate-fade-in{animation:none}}
+/* --- JS components (SPEC §26.5): tooltip, accordion, dropdown,
+   toast, popover, pagination. Tooltip and accordion are pure CSS
+   (:hover/:focus-within, <details>); dropdown, toast, and popover
+   need UI_JS (src/interpreter.ts / rust/src/interpreter.rs),
+   emitted once per page only when one of them is used; pagination
+   is static markup driven by page-level <state>. Every class a
+   component can emit exists here, including the default-case
+   classes (htpl-ui-tooltip-top, htpl-ui-dropdown-menu-left,
+   htpl-ui-popover-panel-left, htpl-ui-toast-default), which
+   restate the base positioning. */
+.htpl-ui-tooltip{position:relative;display:inline-flex}
+.htpl-ui-tooltip-text{position:absolute;z-index:50;left:50%;bottom:calc(100% + .5rem);transform:translateX(-50%);background-color:var(--htpl-ui-primary);color:var(--htpl-ui-primary-foreground);font-size:.75rem;line-height:1.25rem;padding:.375rem .625rem;border-radius:var(--htpl-ui-radius);white-space:nowrap;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .15s ease}
+.htpl-ui-tooltip:hover .htpl-ui-tooltip-text,.htpl-ui-tooltip:focus-within .htpl-ui-tooltip-text{opacity:1;visibility:visible}
+.htpl-ui-tooltip-top .htpl-ui-tooltip-text{bottom:calc(100% + .5rem)}
+.htpl-ui-tooltip-bottom .htpl-ui-tooltip-text{top:calc(100% + .5rem);bottom:auto}
+.htpl-ui-tooltip-left .htpl-ui-tooltip-text{left:auto;right:calc(100% + .5rem);top:50%;bottom:auto;transform:translateY(-50%)}
+.htpl-ui-tooltip-right .htpl-ui-tooltip-text{left:calc(100% + .5rem);right:auto;top:50%;bottom:auto;transform:translateY(-50%)}
+.htpl-ui-accordion{border:1px solid var(--htpl-ui-border);border-radius:var(--htpl-ui-radius);background-color:var(--htpl-ui-card);color:var(--htpl-ui-card-foreground)}
+.htpl-ui-accordion-summary{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem 1rem;font-weight:600;cursor:pointer;list-style:none}
+.htpl-ui-accordion-summary::-webkit-details-marker{display:none}
+.htpl-ui-accordion-summary::after{content:"▾";color:var(--htpl-ui-muted-foreground);transition:transform .15s ease}
+.htpl-ui-accordion[open] .htpl-ui-accordion-summary::after{transform:rotate(180deg)}
+.htpl-ui-accordion-body{padding:0 1rem 1rem}
+.htpl-ui-dropdown{position:relative;display:inline-flex}
+.htpl-ui-dropdown-menu{display:none;position:absolute;top:calc(100% + .25rem);left:0;z-index:50;min-width:12rem;background-color:var(--htpl-ui-card);color:var(--htpl-ui-card-foreground);border:1px solid var(--htpl-ui-border);border-radius:var(--htpl-ui-radius);box-shadow:0 10px 15px -3px rgba(0,0,0,.1);padding:.25rem}
+.htpl-ui-dropdown-menu-left{left:0}
+.htpl-ui-dropdown-menu-right{left:auto;right:0}
+.htpl-ui-dropdown.htpl-ui-open .htpl-ui-dropdown-menu{display:block}
+.htpl-ui-dropdown-menu a,.htpl-ui-dropdown-menu button{display:block;width:100%;text-align:left;padding:.5rem .75rem;font-size:.875rem;color:var(--htpl-ui-card-foreground);background:none;border:0;border-radius:calc(var(--htpl-ui-radius) - .25rem);cursor:pointer;text-decoration:none}
+.htpl-ui-dropdown-menu a:hover,.htpl-ui-dropdown-menu button:hover{background-color:var(--htpl-ui-muted)}
+.htpl-ui-toast{position:fixed;right:1rem;bottom:1rem;z-index:50;display:flex;align-items:center;gap:.75rem;max-width:24rem;background-color:var(--htpl-ui-card);color:var(--htpl-ui-card-foreground);border:1px solid var(--htpl-ui-border);border-radius:var(--htpl-ui-radius);box-shadow:0 10px 15px -3px rgba(0,0,0,.1);padding:.75rem 1rem;font-size:.875rem}
+.htpl-ui-toast-default{border-color:var(--htpl-ui-border)}
+.htpl-ui-toast-destructive{border-color:var(--htpl-ui-destructive);color:var(--htpl-ui-destructive)}
+.htpl-ui-toast-message{flex:1}
+.htpl-ui-toast-close{background:none;border:0;padding:0;font-size:1.25rem;line-height:1;color:var(--htpl-ui-muted-foreground);cursor:pointer}
+.htpl-ui-popover{position:relative;display:inline-flex}
+.htpl-ui-popover-panel{display:none;position:absolute;top:calc(100% + .25rem);left:0;z-index:50;min-width:16rem;max-width:24rem;background-color:var(--htpl-ui-card);color:var(--htpl-ui-card-foreground);border:1px solid var(--htpl-ui-border);border-radius:var(--htpl-ui-radius);box-shadow:0 10px 15px -3px rgba(0,0,0,.1);padding:1rem}
+.htpl-ui-popover-panel-left{left:0}
+.htpl-ui-popover-panel-right{left:auto;right:0}
+.htpl-ui-popover.htpl-ui-open .htpl-ui-popover-panel{display:block}
+.htpl-ui-pagination{display:flex;align-items:center;gap:.5rem}
+.htpl-ui-pagination-label{font-size:.875rem;color:var(--htpl-ui-muted-foreground)}
+
+
+</style>
+<style id="registry-design-system">
+/* Registry design system, shared by the HTPL registry browse page
+   (playground/build-registry.mjs, inlined at build time) and the registry
+   dashboard (registry-dashboard/index.html, linked as a stylesheet).
+   Plain CSS, no build step, no new runtime dependencies, no webfont
+   fetch: the font stacks name Geist first and fall back to system faces,
+   so the page renders identically offline.
+ *
+ * Tokens alias Halo (--htpl-ui-*) with a literal fallback, so this file
+ * works standalone on the dashboard AND layered over Halo on the
+ * registry page. Where Halo is loaded its value wins; where it is not,
+ * the fallback is the same value. Do not edit the fallback literals
+ * without editing ui/ui.css to match.
+ *
+ * Authority: Vercel Web Interface Guidelines
+ * (https://github.com/vercel-labs/agent-skills/blob/main/skills/web-design-guidelines/references/command.md
+ * and https://vercel.com/design/guidelines), Vercel writing guidelines
+ * (https://raw.githubusercontent.com/vercel-labs/writing-guidelines/main/command.md),
+ * Vercel DESIGN.md in voltagent/awesome-design-md, Taste Skill
+ * (https://www.tasteskill.dev/). Rule conflicts are recorded in
+ * docs/registry-design-notes.md; web-design-guidelines wins.
+ *
+ * Identity: Halo black-and-white. One palette (warm neutral + one dark
+ * accent), no gradients, no emoji, no glass cards. The <> mark stays.
+ * Colour is spent on data (badges, status text), never on decoration.
+ */
+
+/* ------------------------------------------------------------------ */
+/* Tokens                                                              */
+/* ------------------------------------------------------------------ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Surfaces: canvas, canvas-soft, card. Vercel DESIGN.md surface
+     ladder (canvas #ffffff, canvas-soft #fafafa); Halo values match. */
+  --ds-bg: var(--htpl-ui-background, #ffffff);
+  --ds-bg-soft: var(--htpl-ui-muted, #f4f4f5);
+  --ds-card: var(--htpl-ui-card, #ffffff);
+
+  /* Text: ink, body, mute. */
+  --ds-fg: var(--htpl-ui-foreground, #0a0a0a);
+  --ds-fg-body: #4d4d4d;
+  --ds-fg-muted: var(--htpl-ui-muted-foreground, #71717a);
+
+  /* One dark accent: near-black in light mode, near-white in dark mode. */
+  --ds-primary: var(--htpl-ui-primary, #111111);
+  --ds-on-primary: var(--htpl-ui-primary-foreground, #ffffff);
+
+  /* Lines and inputs. */
+  --ds-border: var(--htpl-ui-border, #e4e4e7);
+  --ds-border-strong: #a1a1a1;
+  --ds-input-border: var(--htpl-ui-input, #e4e4e7);
+
+  /* Focus ring. Never remove it without a replacement. */
+  --ds-ring: var(--htpl-ui-ring, #0a0a0a);
+
+  /* Semantic colours. Status is always labelled in words as well as
+     colour, so colour is never the only cue. */
+  --ds-danger: var(--htpl-ui-destructive, #dc2626);
+  --ds-danger-fg: var(--htpl-ui-destructive-foreground, #ffffff);
+  --ds-danger-soft: #f7d4d6;
+  --ds-warning: #f5a623;
+  --ds-warning-soft: #ffefcf;
+  --ds-success: #137333;
+
+  /* Type. Geist named first (Vercel DESIGN.md); Inter then system
+     faces are the substitutes. Mono carries code and technical labels. */
+  --ds-font-sans: Geist, Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ds-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+
+  /* Type scale (Vercel DESIGN.md typography table, display sizes
+     capped: this is a catalogue page, not a marketing hero). */
+  --ds-text-display: 2rem;      /* 32px, section headline */
+  --ds-text-title: 1.5rem;      /* 24px, card-cluster headline */
+  --ds-text-body: 1rem;         /* 16px, default body */
+  --ds-text-small: 0.875rem;    /* 14px, secondary body */
+  --ds-text-caption: 0.75rem;   /* 12px, badge and footer labels */
+  --ds-text-code: 0.8125rem;    /* 13px, inline code */
+
+  /* Radii: nested, child <= parent (Vercel guidelines). Halo radius
+     is 8px; inner surfaces step down to 6px. */
+  --ds-radius: var(--htpl-ui-radius, 0.5rem); /* 8px */
+  --ds-radius-inner: 0.375rem;                /* 6px */
+  --ds-radius-pill: 9999px;
+
+  /* Spacing: 4px base unit, multiples of 4 (Vercel DESIGN.md). */
+  --ds-space-1: 0.25rem;  /* 4px */
+  --ds-space-2: 0.5rem;   /* 8px */
+  --ds-space-3: 0.75rem;  /* 12px */
+  --ds-space-4: 1rem;     /* 16px */
+  --ds-space-6: 1.5rem;   /* 24px */
+  --ds-space-8: 2rem;     /* 32px */
+  --ds-space-12: 3rem;    /* 48px */
+
+  /* Layered shadows (Vercel guidelines): ambient + direct light,
+     at least two layers, never one heavy drop shadow. */
+  --ds-shadow-card: 0 1px 1px rgba(0, 0, 0, 0.05), 0 2px 2px rgba(0, 0, 0, 0.04);
+  --ds-shadow-raised: 0 1px 1px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+
+  /* Touch. */
+  --ds-tap-highlight: rgba(0, 0, 0, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ds-bg: var(--htpl-ui-background, #09090b);
+    --ds-bg-soft: var(--htpl-ui-muted, #27272a);
+    --ds-card: var(--htpl-ui-card, #09090b);
+    --ds-fg: var(--htpl-ui-foreground, #fafafa);
+    --ds-fg-body: #d4d4d8;
+    --ds-fg-muted: var(--htpl-ui-muted-foreground, #a1a1aa);
+    --ds-primary: var(--htpl-ui-primary, #fafafa);
+    --ds-on-primary: var(--htpl-ui-primary-foreground, #09090b);
+    --ds-border: var(--htpl-ui-border, #27272a);
+    --ds-border-strong: #52525b;
+    --ds-input-border: var(--htpl-ui-input, #27272a);
+    --ds-ring: var(--htpl-ui-ring, #fafafa);
+    --ds-danger: var(--htpl-ui-destructive, #ef4444);
+    --ds-danger-soft: #450a0a;
+    --ds-warning-soft: #451a03;
+    --ds-success: #4ade80;
+    --ds-shadow-card: 0 1px 1px rgba(0, 0, 0, 0.4), 0 2px 2px rgba(0, 0, 0, 0.3);
+    --ds-shadow-raised: 0 1px 1px rgba(0, 0, 0, 0.4), 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+    --ds-tap-highlight: rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* Explicit theme override wins over the media query. */
+[data-theme="dark"] {
+  --ds-bg: #09090b;
+  --ds-bg-soft: #27272a;
+  --ds-card: #09090b;
+  --ds-fg: #fafafa;
+  --ds-fg-body: #d4d4d8;
+  --ds-fg-muted: #a1a1aa;
+  --ds-primary: #fafafa;
+  --ds-on-primary: #09090b;
+  --ds-border: #27272a;
+  --ds-border-strong: #52525b;
+  --ds-input-border: #27272a;
+  --ds-ring: #fafafa;
+  --ds-danger: #ef4444;
+  --ds-danger-soft: #450a0a;
+  --ds-warning-soft: #451a03;
+  --ds-success: #4ade80;
+}
+
+[data-theme="light"] {
+  --ds-bg: #ffffff;
+  --ds-bg-soft: #f4f4f5;
+  --ds-card: #ffffff;
+  --ds-fg: #0a0a0a;
+  --ds-fg-body: #4d4d4d;
+  --ds-fg-muted: #71717a;
+  --ds-primary: #111111;
+  --ds-on-primary: #ffffff;
+  --ds-border: #e4e4e7;
+  --ds-border-strong: #a1a1a1;
+  --ds-input-border: #e4e4e7;
+  --ds-ring: #0a0a0a;
+  --ds-danger: #dc2626;
+  --ds-danger-soft: #f7d4d6;
+  --ds-warning-soft: #ffefcf;
+  --ds-success: #137333;
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+
+.ds-page,
+body.ds-page {
+  background-color: var(--ds-bg);
+  color: var(--ds-fg);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Suppress desktop rubber-band bounce; keep coarse-pointer defaults
+   so mobile pull-to-refresh still works. */
+@media (pointer: fine) {
+  html {
+    overscroll-behavior: none;
+  }
+}
+
+body {
+  font-family: var(--ds-font-sans);
+  line-height: 1.5;
+}
+
+/* Headings: balanced wrap, no widows; Title Case is a copy rule, not
+   a transform, so code names and identifiers keep their own case. */
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+  letter-spacing: -0.02em;
+  scroll-margin-top: 4.5rem;
+}
+
+[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Links and buttons: hover state, touch-action, tap highlight. */
+a, button, input, select, textarea, summary {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: var(--ds-tap-highlight);
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Focus: visible ring on :focus-visible only. Never drop the
+   outline without a replacement ring. Sticky headers must not cover the focused
+   element: scroll-margin-top above handles anchored headings. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--ds-ring);
+  outline-offset: 2px;
+}
+
+/* Images: dimensions come from width/height attributes in the markup
+   (no layout shift); CSS only keeps them inside their container. */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ------------------------------------------------------------------ */
+/* Utilities                                                           */
+/* ------------------------------------------------------------------ */
+
+.ds-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip link: hidden until keyboard focus, then visible. */
+.ds-skip-link {
+  position: absolute;
+  left: var(--ds-space-4);
+  top: -4rem;
+  z-index: 100;
+  padding: var(--ds-space-2) var(--ds-space-4);
+  background-color: var(--ds-primary);
+  color: var(--ds-on-primary);
+  border-radius: var(--ds-radius-inner);
+  font-weight: 500;
+  text-decoration: none;
+  transition: top 0.15s ease;
+}
+
+.ds-skip-link:focus-visible {
+  top: var(--ds-space-2);
+  outline-offset: 2px;
+}
+
+/* Tabular numbers for counts and comparisons. */
+.ds-numeric {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Long content: truncate one line, clamp two or three lines, break
+   long tokens. Flex children need min-width: 0 for truncation to work. */
+.ds-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-clamp-2,
+.ds-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ds-clamp-2 {
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.ds-clamp-3 {
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.ds-break-words {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.ds-min-w-0 {
+  min-width: 0;
+}
+
+/* Eyebrow: mono technical label (Vercel DESIGN.md caption-mono). */
+.ds-eyebrow {
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-caption);
+  line-height: 1.333;
+  color: var(--ds-fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Lead paragraph under a page headline. */
+.ds-lead {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: var(--ds-fg-body);
+}
+
+/* Container: centred, 72rem cap, 16px gutters on mobile, 24px desktop. */
+.ds-container {
+  width: 100%;
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--ds-space-4);
+  padding-right: var(--ds-space-4);
+  padding-left: max(var(--ds-space-4), env(safe-area-inset-left));
+  padding-right: max(var(--ds-space-4), env(safe-area-inset-right));
+}
+
+@media (min-width: 768px) {
+  .ds-container {
+    padding-left: var(--ds-space-6);
+    padding-right: var(--ds-space-6);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Layout: header, nav, footer                                         */
+/* ------------------------------------------------------------------ */
+
+.ds-promo {
+  background-color: var(--ds-primary);
+  color: var(--ds-on-primary);
+  font-size: var(--ds-text-small);
+}
+
+.ds-promo a {
+  color: inherit;
+}
+
+.ds-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--ds-bg);
+  border-bottom: 1px solid var(--ds-border);
+}
+
+.ds-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-4);
+  min-height: 4rem;
+  padding-top: var(--ds-space-2);
+  padding-bottom: var(--ds-space-2);
+}
+
+.ds-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: inherit;
+  text-decoration: none;
+  min-height: 2.75rem;
+}
+
+.ds-brand img {
+  width: 2rem;
+  height: 2rem;
+  flex: none;
+}
+
+.ds-nav-list {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  gap: var(--ds-space-6);
+}
+
+@media (min-width: 768px) {
+  .ds-nav-list {
+    display: flex;
+  }
+}
+
+.ds-nav-list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--ds-fg-body);
+  text-decoration: none;
+  font-size: var(--ds-text-small);
+  font-weight: 500;
+}
+
+.ds-nav-list a:hover {
+  color: var(--ds-fg);
+  text-decoration: underline;
+}
+
+.ds-nav-list a[aria-current="page"] {
+  color: var(--ds-fg);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+.ds-footer {
+  margin-top: var(--ds-space-8);
+  padding: var(--ds-space-6) var(--ds-space-4);
+  background-color: var(--ds-bg-soft);
+  border-top: 1px solid var(--ds-border);
+  font-size: var(--ds-text-small);
+  color: var(--ds-fg-muted);
+  text-align: center;
+}
+
+.ds-footer p {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Buttons                                                             */
+/* ------------------------------------------------------------------ */
+
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-2);
+  min-height: 2.5rem;
+  padding: 0 var(--ds-space-4);
+  font: inherit;
+  font-size: var(--ds-text-small);
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  border-radius: var(--ds-radius);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ds-btn-primary {
+  background-color: var(--ds-primary);
+  color: var(--ds-on-primary);
+}
+
+.ds-btn-primary:hover {
+  opacity: 0.9;
+}
+
+.ds-btn-secondary {
+  background-color: var(--ds-bg-soft);
+  color: var(--ds-fg);
+}
+
+.ds-btn-secondary:hover {
+  background-color: var(--ds-border);
+}
+
+.ds-btn-outline {
+  background-color: transparent;
+  border-color: var(--ds-input-border);
+  color: var(--ds-fg);
+}
+
+.ds-btn-outline:hover {
+  background-color: var(--ds-bg-soft);
+}
+
+.ds-btn-destructive {
+  background-color: var(--ds-danger);
+  color: var(--ds-danger-fg);
+}
+
+.ds-btn-destructive:hover {
+  opacity: 0.9;
+}
+
+.ds-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 44px minimum touch target on coarse pointers. */
+@media (pointer: coarse) {
+  .ds-btn {
+    min-height: 2.75rem;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Badges                                                              */
+/* ------------------------------------------------------------------ */
+
+.ds-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: var(--ds-radius-pill);
+  font-size: var(--ds-text-caption);
+  font-weight: 600;
+  line-height: 1.333;
+  white-space: nowrap;
+}
+
+.ds-badge-primary {
+  background-color: var(--ds-primary);
+  color: var(--ds-on-primary);
+}
+
+.ds-badge-secondary {
+  background-color: var(--ds-bg-soft);
+  color: var(--ds-fg-body);
+}
+
+.ds-badge-outline {
+  background-color: transparent;
+  border-color: var(--ds-input-border);
+  color: var(--ds-fg);
+}
+
+.ds-badge-destructive {
+  background-color: var(--ds-danger);
+  color: var(--ds-danger-fg);
+}
+
+/* ------------------------------------------------------------------ */
+/* Cards and the specimen catalogue                                    */
+/* ------------------------------------------------------------------ */
+
+/* Taste pattern 11, specimen catalogue: each gadget is one specimen,
+   name first, aligned figures, quiet panel, no decoration. */
+.ds-card {
+  background-color: var(--ds-card);
+  color: var(--ds-fg);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius);
+  box-shadow: var(--ds-shadow-card);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ds-card:hover {
+  border-color: var(--ds-border-strong);
+  box-shadow: var(--ds-shadow-raised);
+}
+
+.ds-card-header {
+  padding: var(--ds-space-6) var(--ds-space-6) 0;
+}
+
+.ds-card-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.25;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-space-2);
+  min-width: 0;
+}
+
+.ds-card-title .ds-truncate {
+  flex: 1 1 auto;
+}
+
+.ds-card-body {
+  padding: var(--ds-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-3);
+}
+
+.ds-card-body > * {
+  margin: 0;
+}
+
+/* Gadget list: 1 column at 390px, 2 columns at 768px and up. Lists
+   over 50 items get content-visibility so long pages stay fast. */
+.ds-gadget-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ds-space-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .ds-gadget-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.ds-gadget-list > li {
+  min-width: 0;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 320px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Code                                                                */
+/* ------------------------------------------------------------------ */
+
+.ds-code {
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-code);
+  background-color: var(--ds-bg-soft);
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.25rem;
+  overflow-wrap: break-word;
+}
+
+/* Install block: ink surface, nested radius (6px inside the 8px card). */
+.ds-codeblock {
+  background-color: var(--ds-primary);
+  color: var(--ds-on-primary);
+  border-radius: var(--ds-radius-inner);
+  padding: var(--ds-space-4);
+  overflow-x: auto;
+}
+
+.ds-codeblock pre,
+.ds-codeblock code {
+  background-color: transparent;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+.ds-codeblock code {
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-code);
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------------ */
+/* Forms (dashboard use first; the registry search uses the same)      */
+/* ------------------------------------------------------------------ */
+
+.ds-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-1);
+  margin: 0;
+  min-width: 0;
+}
+
+.ds-label {
+  display: block;
+  font-weight: 600;
+  font-size: var(--ds-text-small);
+}
+
+.ds-label small {
+  font-weight: 400;
+  color: var(--ds-fg-muted);
+}
+
+.ds-hint {
+  font-size: var(--ds-text-small);
+  color: var(--ds-fg-muted);
+  margin: 0;
+}
+
+.ds-input,
+.ds-select,
+.ds-textarea {
+  font: inherit;
+  font-size: 1rem; /* 16px minimum on mobile: no iOS auto-zoom. */
+  color: var(--ds-fg);
+  background-color: var(--ds-bg);
+  border: 1px solid var(--ds-input-border);
+  border-radius: var(--ds-radius);
+  width: 100%;
+  min-height: 2.75rem; /* 44px touch target. */
+}
+
+.ds-input,
+.ds-select {
+  height: 2.75rem;
+  padding: 0 var(--ds-space-3);
+}
+
+.ds-textarea {
+  padding: var(--ds-space-2) var(--ds-space-3);
+  min-height: 5rem;
+  resize: vertical;
+}
+
+/* Native select needs explicit colours or Windows dark mode breaks. */
+.ds-select {
+  background-color: var(--ds-bg);
+  color: var(--ds-fg);
+}
+
+.ds-input::placeholder,
+.ds-textarea::placeholder {
+  color: var(--ds-fg-muted);
+}
+
+.ds-input:disabled,
+.ds-select:disabled,
+.ds-textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Error text sits next to its field and names the fix, not only the
+   problem. Colour is never the only cue: the text carries the message. */
+.ds-error {
+  color: var(--ds-danger);
+  font-size: var(--ds-text-small);
+  font-weight: 500;
+  margin: 0;
+}
+
+.ds-input[aria-invalid="true"],
+.ds-select[aria-invalid="true"],
+.ds-textarea[aria-invalid="true"] {
+  border-color: var(--ds-danger);
+}
+
+/* Search row: input grows, button stays put. */
+.ds-search {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-2);
+  align-items: end;
+}
+
+.ds-search .ds-field {
+  flex: 1 1 16rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Tables                                                              */
+/* ------------------------------------------------------------------ */
+
+.ds-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius);
+}
+
+.ds-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--ds-text-small);
+  background-color: var(--ds-card);
+  color: var(--ds-fg);
+}
+
+.ds-table caption {
+  padding: var(--ds-space-3) var(--ds-space-4);
+  font-weight: 600;
+  text-align: left;
+}
+
+.ds-table th,
+.ds-table td {
+  padding: var(--ds-space-2) var(--ds-space-4);
+  text-align: left;
+  border-bottom: 1px solid var(--ds-border);
+  vertical-align: top;
+}
+
+/* Header in mono caps (Vercel DESIGN.md ex-data-table-cell). */
+.ds-table th {
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-caption);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ds-fg-muted);
+  background-color: var(--ds-bg-soft);
+}
+
+.ds-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.ds-table td .ds-numeric,
+.ds-table th .ds-numeric {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ */
+/* Alerts, notices, empty states                                       */
+/* ------------------------------------------------------------------ */
+
+/* Notice: the 4-hour sync notice on the dashboard, and the static
+   status note on the registry page. Border + text, not colour alone. */
+.ds-notice {
+  border: 1px solid var(--ds-border-strong);
+  background-color: var(--ds-bg-soft);
+  border-radius: var(--ds-radius);
+  padding: var(--ds-space-3) var(--ds-space-4);
+}
+
+.ds-notice strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.ds-notice p {
+  margin: 0;
+}
+
+.ds-alert {
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius);
+  padding: var(--ds-space-4);
+  background-color: var(--ds-card);
+  color: var(--ds-fg);
+}
+
+.ds-alert-title {
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+}
+
+.ds-alert p:last-child {
+  margin-bottom: 0;
+}
+
+.ds-alert-destructive {
+  border-color: var(--ds-danger);
+  color: var(--ds-danger);
+}
+
+.ds-alert-destructive .ds-alert-title {
+  color: var(--ds-danger);
+}
+
+/* Empty state (Vercel DESIGN.md ex-empty-state-card): generous
+   padding on a soft surface, a heading, one next step, no dead end. */
+.ds-empty {
+  background-color: var(--ds-bg-soft);
+  border: 1px solid var(--ds-border);
+  border-radius: 0.75rem;
+  padding: var(--ds-space-12) var(--ds-space-6);
+  text-align: center;
+}
+
+.ds-empty h2,
+.ds-empty h3 {
+  margin-top: 0;
+}
+
+.ds-empty p {
+  max-width: 32rem;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--ds-fg-body);
+}
+
+.ds-empty .ds-btn {
+  margin-top: var(--ds-space-2);
+}
+
+/* Stat figures: aligned, tabular numbers (Taste quiet instrument). */
+.ds-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-2) var(--ds-space-6);
+  font-size: var(--ds-text-small);
+  color: var(--ds-fg-muted);
+  margin: 0;
+}
+
+.ds-stats strong {
+  color: var(--ds-fg);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ */
+/* Dashboard app shell (registry-dashboard/index.html only)            */
+/* ------------------------------------------------------------------ */
+
+/* The registry browse page inlines this file but uses none of the
+   shell classes below; they are inert there. Shell decision (see
+   docs/registry-dashboard-redesign-notes.md and
+   registry-dashboard/redesign-spec.md): fixed 256px left sidebar
+   on desktop, off-canvas drawer below 768px, no desktop collapse,
+   no org switcher. All values reuse existing tokens; no new token,
+   colour, or font is introduced here. */
+
+[hidden] { display: none !important; }
+
+/* Shell grid: 16rem sidebar + content. Below 768px the grid becomes
+   a block and the sidebar turns into the drawer (mobile rules). */
+.ds-shell {
+  display: grid;
+  grid-template-columns: 16rem minmax(0, 1fr);
+  min-height: 100dvh;
+}
+
+.ds-shell-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.ds-shell-main > main {
+  flex: 1 1 auto;
+}
+
+/* Sidebar: sticky full-height rail on desktop, own scroll. */
+.ds-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background-color: var(--ds-bg);
+  border-right: 1px solid var(--ds-border);
+  display: flex;
+  flex-direction: column;
+  padding: var(--ds-space-4) 0;
+}
+
+.ds-sidebar-brand {
+  padding: 0 var(--ds-space-4) var(--ds-space-4);
+  margin-bottom: var(--ds-space-2);
+  border-bottom: 1px solid var(--ds-border);
+}
+
+.ds-sidebar-section {
+  padding: 0 var(--ds-space-2);
+  margin-top: var(--ds-space-4);
+}
+
+.ds-sidebar-section:first-child {
+  margin-top: 0;
+}
+
+.ds-sidebar-section .ds-eyebrow {
+  display: block;
+  padding: 0 var(--ds-space-3);
+  margin: 0 0 var(--ds-space-1);
+}
+
+.ds-sidebar-nav {
+  list-style: none;
+  margin: var(--ds-space-2) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* One sidebar link. Active state is background plus weight plus a
+   left indicator bar, never colour alone. 44px tall on every device. */
+.ds-nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  min-height: 2.75rem;
+  padding: var(--ds-space-2) var(--ds-space-3);
+  border-radius: var(--ds-radius-inner);
+  border-left: 2px solid transparent;
+  color: var(--ds-fg-body);
+  text-decoration: none;
+  font-size: var(--ds-text-small);
+  font-weight: 500;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.ds-nav-item:hover {
+  background-color: var(--ds-bg-soft);
+  color: var(--ds-fg);
+}
+
+.ds-nav-item[aria-current="page"] {
+  background-color: var(--ds-bg-soft);
+  color: var(--ds-fg);
+  font-weight: 600;
+  border-left-color: var(--ds-primary);
+}
+
+/* Pending-invites count on the My Invites item. Numeral only;
+   hidden when the count is zero (the Overview card shows the zero). */
+.ds-nav-badge {
+  margin-left: auto;
+  min-width: 1.25rem;
+  padding: 0 0.375rem;
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--ds-primary);
+  color: var(--ds-on-primary);
+  font-size: var(--ds-text-caption);
+  font-weight: 600;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sidebar footer: account block pinned to the foot. Sign-in is a
+   full-width button; signed in, the identity is a link to the
+   Account view (sign-out lives only there, so the id stays unique). */
+.ds-sidebar-footer {
+  margin-top: auto;
+  padding: var(--ds-space-4) var(--ds-space-4) 0;
+  padding-bottom: calc(var(--ds-space-4) + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--ds-border);
+}
+
+.ds-sidebar-footer .ds-btn {
+  width: 100%;
+}
+
+.ds-sidebar-account {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  min-height: 2.75rem;
+  padding: var(--ds-space-1) var(--ds-space-2);
+  border-radius: var(--ds-radius-inner);
+  color: inherit;
+  text-decoration: none;
+}
+
+.ds-sidebar-account:hover {
+  background-color: var(--ds-bg-soft);
+}
+
+.ds-sidebar-account img {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  flex: none;
+}
+
+.ds-sidebar-account-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.ds-sidebar-account-name {
+  font-size: var(--ds-text-small);
+  font-weight: 600;
+}
+
+.ds-sidebar-account-login {
+  font-size: var(--ds-text-small);
+  color: var(--ds-fg-muted);
+}
+
+/* Mobile top bar: menu button + brand, below 768px only. */
+.ds-topbar {
+  display: none;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  align-items: center;
+  gap: var(--ds-space-2);
+  min-height: 4rem;
+  padding: 0 var(--ds-space-4);
+  background-color: var(--ds-bg);
+  border-bottom: 1px solid var(--ds-border);
+}
+
+/* Hamburger: three CSS bars, never an emoji or an image. */
+.ds-menu-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: none;
+  border: 1px solid var(--ds-input-border);
+  border-radius: var(--ds-radius);
+  background-color: var(--ds-bg);
+  color: var(--ds-fg);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.ds-menu-btn:hover {
+  background-color: var(--ds-bg-soft);
+}
+
+.ds-menu-btn-bar {
+  display: block;
+  width: 1rem;
+  height: 2px;
+  background-color: currentColor;
+  border-radius: 1px;
+}
+
+/* Drawer overlay: covers content while the drawer is open, below
+   768px only. Tapping it closes the drawer. */
+.ds-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* View header: eyebrow, h1, lead, at most one primary action.
+   The action sits at the right of the title row on desktop and
+   wraps below the description on narrow screens. No absolute
+   positioning. */
+.ds-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ds-space-4);
+  margin-bottom: var(--ds-space-6);
+  padding-bottom: var(--ds-space-4);
+  border-bottom: 1px solid var(--ds-border);
+}
+
+.ds-page-header-text {
+  flex: 1 1 24rem;
+  min-width: 0;
+}
+
+.ds-page-header-text .ds-eyebrow {
+  margin: 0;
+}
+
+.ds-page-header-text h1 {
+  margin: var(--ds-space-2) 0;
+  font-size: var(--ds-text-display);
+}
+
+.ds-page-header-text .ds-lead {
+  margin: 0;
+}
+
+.ds-page-header-actions {
+  display: flex;
+  gap: var(--ds-space-2);
+  flex: none;
+}
+
+/* View wrapper: no visual style. Only one view is unhidden at a
+   time; the [hidden] guard above owns that. */
+.ds-view {
+  /* No visual style. */
+}
+
+/* Overview stat row: 1 column at 390px, 2 at 768px, 4 at 1024px. */
+.ds-stat-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ds-space-4);
+  margin-bottom: var(--ds-space-6);
+}
+
+@media (min-width: 768px) {
+  .ds-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .ds-stat-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* One stat card: a .ds-card with tighter padding. The "4 Hours"
+   Sync value uses the same value style with text, not a numeral. */
+.ds-stat-card {
+  padding: var(--ds-space-4) var(--ds-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-1);
+}
+
+.ds-stat-value {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+}
+
+.ds-stat-label {
+  margin: 0;
+  font-size: var(--ds-text-small);
+  color: var(--ds-fg-muted);
+}
+
+.ds-stat-link {
+  margin: 0;
+  font-size: var(--ds-text-small);
+}
+
+/* Form card: a .ds-card capped at 40rem (the Builder C answer to
+   "keep 640px or widen" stands: one visual column keeps labels
+   next to inputs). The form inside keeps its column + gap layout;
+   the card supplies border and padding. The Account view reuses
+   this width for its account card. */
+.ds-form-card {
+  max-width: 40rem;
+  padding: var(--ds-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ds-form-card h2,
+.ds-form-card h3 {
+  margin: 0;
+}
+
+/* Danger zone: destructive-action block at the foot of the org
+   detail card. Holds delete-org-btn only. */
+.ds-danger-zone {
+  border: 1px solid var(--ds-danger);
+  border-radius: var(--ds-radius);
+  padding: var(--ds-space-4);
+  margin-top: var(--ds-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-2);
+  align-items: flex-start;
+}
+
+.ds-danger-zone h3 {
+  margin: 0;
+  color: var(--ds-danger);
+  font-size: 1rem;
+}
+
+.ds-danger-zone p {
+  margin: 0;
+  font-size: var(--ds-text-small);
+  color: var(--ds-fg-body);
+}
+
+/* Table refinements: row hover everywhere; the Actions column never
+   wraps, scoped to the tables whose last column is Actions (My
+   Gadgets, members, invites). The SHA-256 cell keeps wrapping its
+   code; no nowrap is applied by column position. */
+.ds-table tbody tr:hover {
+  background-color: var(--ds-bg-soft);
+}
+
+#gadgets-list .ds-table td:last-child,
+#org-detail .ds-table td:last-child {
+  white-space: nowrap;
+}
+
+/* Mobile shell: the sidebar becomes an off-canvas drawer. It is
+   NOT an icon-only collapsed rail on desktop: no desktop collapse
+   toggle exists (see the spec). */
+@media (max-width: 767px) {
+  .ds-shell {
+    display: block;
+  }
+
+  .ds-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 17.5rem;
+    max-width: 85vw;
+    height: auto;
+    z-index: 50;
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform 0.2s ease, visibility 0.2s;
+    box-shadow: var(--ds-shadow-raised);
+  }
+
+  .ds-sidebar.ds-sidebar-open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .ds-topbar {
+    display: flex;
+  }
+}
+
+@media (min-width: 768px) {
+  .ds-drawer-overlay {
+    display: none !important;
+  }
+}
+
+/* Sign-in gate: the shell starts hidden in the markup and the
+   sign-in screen is the default visible content. JS reveals the
+   shell only after GET /me returns an account (see
+   docs/registry-dashboard-gate-notes.md). While gated, the skip
+   link is hidden: its target (#main) sits inside the hidden shell,
+   and the sign-in screen is one card with nothing to skip past. */
+body.ds-gated .ds-skip-link {
+  display: none;
+}
+
+/* Centred auth screen: one card, brand, one clear action. Halo
+   black-and-white, no new tokens, no new dependencies. */
+.ds-signin {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ds-space-6) var(--ds-space-4);
+  padding-top: max(var(--ds-space-6), env(safe-area-inset-top));
+  padding-bottom: max(var(--ds-space-6), env(safe-area-inset-bottom));
+}
+
+.ds-signin-card {
+  width: 100%;
+  max-width: 28rem;
+  padding: var(--ds-space-8) var(--ds-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-4);
+  align-items: stretch;
+}
+
+.ds-signin-brand {
+  display: flex;
+  justify-content: center;
+}
+
+.ds-signin-card h1 {
+  margin: 0;
+  font-size: var(--ds-text-display);
+  text-align: center;
+}
+
+.ds-signin-card .ds-lead {
+  margin: 0;
+  text-align: center;
+}
+
+.ds-signin-btn {
+  width: 100%;
+  min-height: 2.75rem;
+}
+
+.ds-signin-card .ds-hint {
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------ */
+/* Motion                                                              */
+/* ------------------------------------------------------------------ */
+
+/* Transform and opacity only; never a blanket transition. Skeleton pulse
+   stops under prefers-reduced-motion. */
+.ds-skeleton {
+  border-radius: var(--ds-radius);
+  background-color: var(--ds-bg-soft);
+  animation: ds-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes ds-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-skeleton {
+    animation: none;
+  }
+
+  .ds-skip-link,
+  .ds-btn,
+  .ds-card,
+  .ds-sidebar,
+  .ds-menu-btn,
+  .ds-nav-item {
+    transition: none;
+  }
+}
+
+</style>
+<style>
+  body { font-family: var(--ds-font-sans); background: var(--ds-bg); color: var(--ds-fg); }
+  .htpl-code { font-family: var(--ds-font-mono); }
+  .htpl-nav-list a { color: inherit; text-decoration: none; font-weight: 500; }
+  .htpl-nav-list a:hover { text-decoration: underline; }
+  .htpl-only-desktop { display: none; }
+  @media (min-width: 768px) { .htpl-only-desktop { display: inline-flex; } }
+  .ds-card-meta { font-size: var(--ds-text-small); color: var(--ds-fg-muted); }
+  .ds-card-meta dt { font-weight: 600; color: var(--ds-fg); }
+  .ds-card-meta dd { margin: 0; }
+  .ds-card-links { display: flex; flex-wrap: wrap; gap: var(--ds-space-2) var(--ds-space-4); font-size: var(--ds-text-small); }
+  .ds-copy-btn { margin-left: auto; }
+  .ds-codeblock-head { display: flex; align-items: center; gap: var(--ds-space-2); }
+  .ds-codeblock-head .ds-btn { min-height: 2rem; padding: 0 var(--ds-space-2); font-size: var(--ds-text-caption); }
+  .ds-codeblock-head .ds-btn { background-color: transparent; border-color: var(--ds-on-primary); color: var(--ds-on-primary); }
+  .ds-codeblock-head .ds-btn:hover { opacity: 0.85; }
+</style>
+</head>
+<body>
+<a class="ds-skip-link" href="#main">Skip to Content</a>
+<div class="ds-promo">
+  <div class="ds-container" style="display:flex;flex-wrap:wrap;gap:1.5rem;align-items:center;justify-content:space-between;padding-top:0.5rem;padding-bottom:0.5rem;">
+    <span><b>HTPL v1.0.0 Is Here</b> <span style="opacity:.7">Rust-like memory, two runtimes.</span></span>
+    <span style="opacity:.8">No garbage collector. Runs on Pages.</span>
+  </div>
+</div>
+
+<header class="ds-nav">
+  <div class="ds-container ds-nav-inner">
+    <div style="display:flex;align-items:center;gap:0.5rem;">
+      <a class="ds-brand" href="https://htpl.hvcrealm.com/"><span translate="no">&lt;&gt;</span> <span translate="no">HTPL</span></a>
+      <span class="ds-badge ds-badge-outline">Registry</span>
+    </div>
+    <nav aria-label="Primary">
+      <ul class="htpl-nav-list ds-nav-list">
+        <li><a href="https://htpl.hvcrealm.com/">HTPL</a></li>
+        <li><a href="https://htpl.hvcrealm.com/docs/">Docs</a></li>
+        <li><a href="index.html" aria-current="page">Registry</a></li>
+        <li><a href="https://app.registry.htpl.hvcrealm.com/">Dashboard</a></li>
+      </ul>
+    </nav>
+    <span class="ds-badge ds-badge-outline htpl-code htpl-only-desktop">htpl pm install &lt;gadget&gt;</span>
+  </div>
+</header>
+
+<div class="ds-container" style="padding-top:2rem;padding-bottom:2rem;">
+  <main id="main">
+    <h1>Gadget Registry</h1>
+    <p class="ds-lead">Find a gadget, copy its install command, and add it to your project.</p>
+    <p>This page lists the static registry at <code class="htpl-code" translate="no">registry.htpl.hvcrealm.com</code>. The list comes from the registry index file, not a live API. You read the same file the CLI reads, so this list matches what <code class="htpl-code">htpl pm install</code> sees.</p>
+
+    <div class="ds-notice" role="note"><p><strong>New Gadgets Appear Within 4 Hours</strong></p><p>Publishers register gadgets on the dashboard. The registry syncs new registrations every 4 hours, then this page picks them up. A gadget registered today appears here after the next sync.</p></div>
+
+    <p class="ds-stats" id="registry-stats"><span><strong class="ds-numeric" id="gadget-count">–</strong> gadgets</span><span id="index-updated">Loading the registry index…</span></p>
+
+    <div class="ds-alert ds-alert-destructive" id="load-error" role="alert" hidden>
+      <p class="ds-alert-title">The registry index could not be loaded</p>
+      <p id="load-error-detail">The page could not read index.json. No gadget list is shown, because a stale or invented list would be worse than none.</p>
+      <p><button class="ds-btn ds-btn-outline" type="button" id="retry-load">Retry</button></p>
+    </div>
+
+    <div id="loading" aria-live="polite">
+      <p>Loading the registry index…</p>
+    </div>
+
+    <div id="registry-content" hidden>
+      <form class="ds-search" id="registry-search" method="get" action="index.html" role="search">
+        <p class="ds-field">
+          <label class="ds-label" for="registry-search-input">Search Gadgets</label>
+          <input class="ds-input" type="search" id="registry-search-input" name="q" autocomplete="off" spellcheck="false" placeholder="Search gadgets, e.g. csv…">
+        </p>
+        <button class="ds-btn ds-btn-primary" type="submit">Search</button>
+      </form>
+      <p id="search-count" aria-live="polite"></p>
+      <ul class="ds-gadget-list" id="gadget-list"></ul>
+      <div class="ds-empty" id="no-results" hidden>
+        <h3>No Gadgets Match Your Search</h3>
+        <p>Try a shorter name, or check the spelling. The list covers every gadget in the registry.</p>
+        <p><a class="ds-btn ds-btn-outline" href="index.html">Show All Gadgets</a></p>
+      </div>
+    </div>
+
+    <section class="ds-empty" id="empty-registry" aria-labelledby="empty-registry-title" hidden>
+      <h2 id="empty-registry-title">No Gadgets Yet</h2>
+      <p>The registry is live, but no gadget has synced into it yet. New registrations sync every 4 hours, and this page picks them up after each sync.</p>
+      <p>Register the first gadget on the dashboard. Your code stays in your own GitHub repo. The registry stores a pointer to it.</p>
+      <p><a class="ds-btn ds-btn-primary" href="https://app.registry.htpl.hvcrealm.com">Register a Gadget</a></p>
+      <p><a class="ds-btn ds-btn-outline" href="https://htpl.hvcrealm.com/docs/gadgets.html">Read the Gadget Authoring Guide</a></p>
+    </section>
+
+    <h2>Static Index</h2>
+    <p>The registry stores plain files. Your CLI reads them from <code class="htpl-code" translate="no">https://registry.htpl.hvcrealm.com</code>. No request hits a database.</p>
+    <div class="ds-table-wrap"><table class="ds-table"><caption>Static Index Files</caption><thead><tr><th scope="col">File or Command</th><th scope="col">What It Does</th></tr></thead><tbody>
+    <tr><td><code class="htpl-code">index.json</code></td><td>Lists every gadget: description, owner, repo, latest version, and its file.</td></tr>
+    <tr><td><code class="htpl-code">gadgets/&lt;name&gt;.json</code></td><td>Lists one gadget: all versions, tarball URL, SHA-256 hash, signature, and yanked state.</td></tr>
+    <tr><td><code class="htpl-code">htpl pm install &lt;name&gt;</code></td><td>Reads gadgets/&lt;name&gt;.json only. It verifies the tarball hash before it installs.</td></tr>
+    <tr><td><code class="htpl-code">htpl pm search &lt;query&gt;</code></td><td>Reads index.json and filters the list on your machine.</td></tr>
+    </tbody></table></div>
+    <p>Read the full reference in the <a href="https://htpl.hvcrealm.com/docs/gadgets.html">Gadget Authoring Guide</a> and the <a href="https://htpl.hvcrealm.com/docs/package-manager.html">Package Manager Reference</a>.</p>
+  </main>
+</div>
+
+<footer class="ds-footer">
+  <p><span translate="no">HTPL</span> v1.0.0. Hyper Text Programming Language. Built in <span translate="no">HTPL</span>, styled with Halo.</p>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var listEl = document.getElementById('gadget-list');
+  var countEl = document.getElementById('search-count');
+  var countNumEl = document.getElementById('gadget-count');
+  var updatedEl = document.getElementById('index-updated');
+  var contentEl = document.getElementById('registry-content');
+  var emptyEl = document.getElementById('empty-registry');
+  var noResultsEl = document.getElementById('no-results');
+  var errorEl = document.getElementById('load-error');
+  var errorDetailEl = document.getElementById('load-error-detail');
+  var loadingEl = document.getElementById('loading');
+  var searchForm = document.getElementById('registry-search');
+  var searchInput = document.getElementById('registry-search-input');
+  var retryBtn = document.getElementById('retry-load');
+
+  var items = []; // <li> elements, one per gadget, in name order
+  var total = 0;
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function formatGeneratedAt(iso) {
+    try {
+      return new Intl.DateTimeFormat('en-GB', {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+        timeZone: 'UTC'
+      }).format(new Date(iso));
+    } catch (e) {
+      return iso;
+    }
+  }
+
+  function showLoadError(detail) {
+    loadingEl.hidden = true;
+    contentEl.hidden = true;
+    emptyEl.hidden = true;
+    errorEl.hidden = false;
+    errorDetailEl.textContent = detail;
+    updatedEl.textContent = 'Index not loaded.';
+  }
+
+  function gadgetCard(name, entry) {
+    var latest = entry.latest || '';
+    var file = entry.file || ('gadgets/' + name + '.json');
+    var repo = entry.repo || '';
+    var repoUrl = repo ? 'https://github.com/' + repo : '';
+    var ownerLabel = entry.owner || '';
+    if (entry.owner_type) ownerLabel += ' (' + entry.owner_type + ')';
+    var installLatest = 'htpl pm install ' + name;
+    var installPinned = latest ? 'htpl pm install ' + name + '@' + latest : installLatest;
+    var repoLink = repoUrl
+      ? '<a href="' + escapeHtml(repoUrl) + '" translate="no">' + escapeHtml(repo) + '</a>'
+      : '<span>Not listed</span>';
+    return '<li class="ds-min-w-0"><article class="ds-card" id="gadget-' + escapeHtml(name) + '" aria-labelledby="gadget-' + escapeHtml(name) + '-title">'
+      + '<div class="ds-card-header"><h3 class="ds-card-title" id="gadget-' + escapeHtml(name) + '-title">'
+      + '<code class="htpl-code ds-truncate" title="' + escapeHtml(name) + '" translate="no">' + escapeHtml(name) + '</code> '
+      + (latest ? '<span class="ds-badge ds-badge-primary" title="Latest version">' + escapeHtml(latest) + ' (latest)</span>' : '<span class="ds-badge ds-badge-outline">No version listed</span>')
+      + '</h3></div>'
+      + '<div class="ds-card-body">'
+      + '<p class="ds-clamp-3" title="' + escapeHtml(entry.description || '') + '">' + escapeHtml(entry.description || 'No description.') + '</p>'
+      + '<dl class="ds-card-meta">'
+      + '<div><dt>Owner</dt><dd>' + escapeHtml(ownerLabel || 'Not listed') + '</dd></div>'
+      + '<div><dt>Repository</dt><dd>' + repoLink + '</dd></div>'
+      + '<div><dt>Index file</dt><dd><a href="' + escapeHtml(file) + '" translate="no">' + escapeHtml(file) + '</a></dd></div>'
+      + '</dl>'
+      + '<div class="ds-codeblock"><div class="ds-codeblock-head"><pre style="flex:1 1 auto;margin:0;"><code class="htpl-code">' + escapeHtml(installLatest) + '\n' + escapeHtml(installPinned) + '</code></pre>'
+      + '<button class="ds-btn ds-copy-btn" type="button" data-copy="' + escapeHtml(installLatest) + '">Copy</button></div></div>'
+      + '</div></article></li>';
+  }
+
+  function applyFilter(query) {
+    var q = query.trim().toLowerCase();
+    var shown = 0;
+    items.forEach(function (li) {
+      var match = q === '' || li.textContent.toLowerCase().indexOf(q) !== -1;
+      li.hidden = !match;
+      if (match) shown += 1;
+    });
+    if (countEl) {
+      countEl.textContent = q === ''
+        ? 'Showing ' + total + ' of ' + total + ' gadgets.'
+        : 'Showing ' + shown + ' of ' + total + ' gadgets for "' + query.trim() + '".';
+    }
+    if (noResultsEl) noResultsEl.hidden = shown !== 0;
+  }
+
+  function loadIndex() {
+    errorEl.hidden = true;
+    loadingEl.hidden = false;
+    contentEl.hidden = true;
+    emptyEl.hidden = true;
+    updatedEl.textContent = 'Loading the registry index…';
+    return fetch('./index.json')
+      .then(function (res) {
+        if (!res.ok) throw new Error('index.json answered HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (index) {
+        if (!index || index.version !== 1 || typeof index.gadgets !== 'object' || index.gadgets === null) {
+          throw new Error('index.json is not in the expected format (version 1 with a gadgets map)');
+        }
+        var names = Object.keys(index.gadgets).sort();
+        total = names.length;
+        countNumEl.textContent = String(total);
+        updatedEl.textContent = index.generated_at
+          ? 'Updated ' + formatGeneratedAt(index.generated_at) + ' UTC'
+          : 'Index loaded.';
+        loadingEl.hidden = true;
+        if (total === 0) {
+          emptyEl.hidden = false;
+          return;
+        }
+        listEl.innerHTML = names.map(function (name) {
+          return gadgetCard(name, index.gadgets[name]);
+        }).join('');
+        items = Array.prototype.slice.call(listEl.querySelectorAll(':scope > li'));
+        contentEl.hidden = false;
+        var params = new URLSearchParams(window.location.search);
+        var initial = params.get('q') || '';
+        if (initial) searchInput.value = initial;
+        applyFilter(initial);
+      })
+      .catch(function (err) {
+        showLoadError('The page could not read index.json (' + (err && err.message ? err.message : 'network error') + '). No gadget list is shown, because a stale or invented list would be worse than none.');
+      });
+  }
+
+  searchInput.addEventListener('input', function () {
+    var url = new URL(window.location.href);
+    if (searchInput.value) url.searchParams.set('q', searchInput.value);
+    else url.searchParams.delete('q');
+    window.history.replaceState(null, '', url);
+    applyFilter(searchInput.value);
+  });
+
+  searchForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    applyFilter(searchInput.value);
+  });
+
+  listEl.addEventListener('click', function (e) {
+    var btn = e.target && e.target.closest ? e.target.closest('[data-copy]') : null;
+    if (!btn) return;
+    var text = btn.getAttribute('data-copy');
+    function done() {
+      btn.textContent = 'Copied';
+      setTimeout(function () { btn.textContent = 'Copy'; }, 1500);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text); done(); });
+    } else {
+      fallbackCopy(text);
+      done();
+    }
+  });
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'absolute';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) { /* clipboard unavailable */ }
+    document.body.removeChild(ta);
+  }
+
+  retryBtn.addEventListener('click', function () { loadIndex(); });
+
+  loadIndex();
+})();
+</script>
+</body>
+</html>
